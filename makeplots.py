@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import numpy as np
 
 import streamlit as st
 
@@ -18,35 +19,79 @@ def build_scenario_df(tests):
             })
     return pd.DataFrame(rows)
 
-def plot_scenario_heatmaps():
-    with open('reports/tests_optimized_def.json') as f:
-        opt_data = json.load(f)['tests']
-    with open('reports/tests_unoptimized_def.json') as f:
-        unopt_data = json.load(f)['tests']
+def plot_scenario_heatmaps(tests, title, cell_size=10, fig_height=600):
 
-    df_opt = build_scenario_df(opt_data)
-    df_unopt = build_scenario_df(unopt_data)
-
-    z_opt = df_opt.pivot_table(index='scenario', columns='test_index', aggfunc='size', fill_value=0)
-    z_unopt = df_unopt.pivot_table(index='scenario', columns='test_index', aggfunc='size', fill_value=0)
-    fig = make_subplots(
-        rows=1, cols=2,
-        subplot_titles=('Optimized Scenario Schedule', 'Unoptimized Scenario Schedule'),
-        shared_yaxes=True
+    grid_df, _ = make_presence_df(
+        tests, 
+        flipped=False
     )
-    fig1 = go.Figure(data=go.Heatmap(z=z_opt.values, x=z_opt.columns, y=z_opt.index, colorscale='Viridis'))
-    fig2 = go.Figure(data=go.Heatmap(z=z_unopt.values, x=z_unopt.columns, y=z_unopt.index, colorscale='Viridis'))
 
-    # fig.update_layout(
-    #     height=600, width=1000,
-    #     title_text="Heatmap of Scenarios per Test Index",
-    #     xaxis_title="Test Step",
-    #     yaxis_title="Scenario ID"
-    # )
+    grid_df = grid_df.astype(int)
+    # Ensure tidy ordering (optional but often handy)
+    grid_df.index = [f"S{i}" for i in grid_df.index.to_list()]                                # rows S_x
+    grid_df.columns = [f"T{j}" for j in grid_df.columns.to_list()]                      # cols T_x
+    n_rows, n_cols = grid_df.shape
 
-    return fig1, fig2
+    fig = go.Figure(
+        go.Scatter(
 
-def plot_sequence_dots(tests, title):
+            x=np.tile(np.arange(n_cols), n_rows),
+            y=np.repeat(np.arange(n_rows), n_cols), 
+            mode='markers'
+        )
+    )
+    fig.update_traces(
+        marker_symbol='square', 
+        marker_size=cell_size, 
+        marker_color=grid_df.to_numpy().flatten(),
+        marker_cmin=0, marker_cmax=1, 
+        marker_colorscale=[[0, "white"],
+                        [1, "steelblue"]],
+        marker_line_color='black', 
+        marker_line_width=1
+    )
+    fig.update_xaxes(
+        title="Test Configuration",
+        range=[-2, n_cols-1],  # to center the labels
+        tickmode="array",
+        tickvals=np.arange(n_cols),
+        ticktext=grid_df.columns,
+        mirror=True,                
+        tickangle=-90,
+        side="top",
+        showgrid=True,             # borders come from the markers
+        tick0=0,
+        dtick=1,
+        # automargin=False,
+        tickfont=dict(size=8.5, color="black"),
+        tickson="boundaries",
+    )
+    
+    fig.update_yaxes(
+        title="Scenario ID",
+        range=[-0.5, n_rows - 0.5],  # to center the labels
+        autorange="reversed",       # S1 at the top
+        tickmode="array",
+        tickvals=np.arange(n_rows),
+        ticktext=grid_df.index,
+        mirror=True,
+        showgrid=True,
+        dtick=1,
+        tick0=0,
+        tickson="boundaries",
+        # automargin=False,
+    )
+    
+    fig.update_layout(
+        title=title,
+        height=fig_height, 
+        # margin=dict(l=0, r=0, t=0, b=BOTTOM),
+        # plot_bgcolor="white", 
+    )
+
+    return fig
+
+def plot_sequence_dots(tests, title, cell_size=10, fig_height=600):
     
     # Extract ordered test IDs and their scenarios from tests
     # test: [{id: "1", scenarios: ["3", "19"]}, {id: "2", scenarios: ["3", "19", "5"]}, ...]
@@ -61,22 +106,44 @@ def plot_sequence_dots(tests, title):
         x=test_ids,
         y=seq_ids,
         mode='markers',
-        marker=dict(size=10),
-        line=dict(shape='hv')
+        marker=dict(size=cell_size),
     ))
     fig.update_layout(
         title=title,
-        xaxis_title='Test ID (in original order)',
-        yaxis_title='Scenarios',
-        xaxis=dict(type='category', categoryorder='array', categoryarray=test_ids),
-        yaxis=dict(type='category', categoryorder='array', categoryarray=sorted(seq_ids), autorange='reversed'),
+        xaxis_title='Test ID (in execution order)',
+        yaxis_title='Scenario ID',
+        xaxis=dict(
+            type='category', 
+            categoryorder='array', 
+            range=[-0.5, len(tests)],  # to center the labels
+            categoryarray=test_ids, 
+            showgrid=True,
+            dtick=1,
+            tick0=0,
+            tickson='boundaries',
+            tickangle=-90,
+            tickfont=dict(size=8.5, color='black'),
+            mirror="allticks",
+        ),
+        yaxis=dict(
+            type='category', 
+            categoryorder='array', 
+            range=[-0.5, len(seq_ids)-0.5],  # to center the labels
+            categoryarray=sorted(seq_ids), 
+            autorange='reversed',
+            showgrid=True,
+            dtick=1,
+            tick0=0,
+            tickson='boundaries',
+            mirror="allticks",
+        ),
         showlegend=False,
-        height=600
+        height=fig_height,
     )
 
     return fig
 
-def build_scenario_timeline(tests, title="Scenario Timeline"):
+def build_scenario_timeline(tests, title, cell_size=10, fig_height=600):
     """
     Build a Plotly timeline (Gantt) figure that shows how long each scenario
     remains active across a test sequence.
@@ -124,7 +191,7 @@ def build_scenario_timeline(tests, title="Scenario Timeline"):
             x=xs,
             y=ys,
             mode="markers",
-            marker=dict(size=14, symbol="square"),   # “small bar” feel
+            marker=dict(size=cell_size, symbol="square"),   # “small bar” feel
             hovertemplate="Test ID: %{x}<br>Scenario ID: %{y}<extra></extra>",
         )
     )
@@ -133,20 +200,32 @@ def build_scenario_timeline(tests, title="Scenario Timeline"):
     fig.update_layout(
         title=title,
         xaxis=dict(
-            title="Test ID (execution order)",
+            title="Test ID (in execution order)",
             type="category",
             categoryorder="array",
+            range=[-0.5, len(ordered_test_ids) - 0.5],  # to center the labels
             categoryarray=ordered_test_ids,
-            tickangle=45
+            tickangle=-90,
+            tickfont=dict(size=8.5, color="black"),
+            tickson="boundaries",
+            showgrid=True,
+            dtick=1,
+            tick0=0,
+            mirror="allticks",
         ),
         yaxis=dict(
             title="Scenario ID",
             type="category",
             categoryorder="array",
             # reverse so the numerically first scenario appears at the top
-            categoryarray=ordered_scenario_ids[::-1]
+            categoryarray=ordered_scenario_ids[::-1],
+            showgrid=True,
+            dtick=1,
+            tick0=0,
+            tickson="boundaries",
+            mirror="allticks",
         ),
-        height=650,
+        height=fig_height,
         margin=dict(l=80, r=40, t=80, b=120)
     )
     return fig
@@ -192,60 +271,8 @@ def make_presence_df(tests, flipped=False) -> pd.DataFrame:
     if flipped:
         # Transpose the DataFrame to have tests as rows and scenarios as columns
         df = df.T
-    
 
-    # ------------------------------------------------------------------
-    # 3.  Load Scenario‑to‑Requirement map (from scenarios.csv)
-    #     -------------------------------------------------------------
-    # The file is assumed to have *at least* two columns:
-    #     scenario_id , requirement_id
-    # (If it also contains quantity_id or other fields that is fine;
-    #  we only use the two shown.)
-    # ------------------------------------------------------------------
-    sc_map = (
-        pd.read_csv("reports/scenarios.csv")          # ← path to the file the user supplied
-        .groupby("scenarioID")["requirementIDs"]
-        .agg(list)                         # scenario_id → [req1, req2, …]
-        .to_dict()
-    )
-
-    # ------------------------------------------------------------------
-    # 4.  Pre‑compute, for every Test, which requirements are present
-    #     -----------------------------------------------------------
-    #  – Because the JSON already tells us, per test, which quantity
-    #    objects are loaded and which requirements each quantity
-    #    fulfils, we can build a quick helper dictionary.  This way
-    #    we do not need scenarios.csv again later on.
-    # ------------------------------------------------------------------
-    test_req_map = {}     # a dictionary mapping test_id → set of requirement_ids
-    for t in tests:                                  # ← the same `tests` list you already parsed
-        tid = str(t["id"])
-        reqs = []
-        for q in t["quantities"].values():
-            reqs.extend(q["requirements"])
-        test_req_map[tid] = set(reqs)                # faster look‑ups later
-    
-    # ------------------------------------------------------------------
-    # 5.  Build a *text* matrix with the requirement lists
-    #     -----------------------------------------------
-    #     – Wherever the scenario is *inactive* we keep an empty string.
-    #     – Wherever the scenario is active / applied / retracted we
-    #       insert a comma‑separated list *filtered* to requirements
-    #       that are actually in the current test.
-    # ------------------------------------------------------------------
-    disp = pd.DataFrame(
-            "", index=df.index, columns=df.columns   # `df` is the presence‑matrix from step 1
-    )
-
-    for sc in disp.index:
-        sc_reqs = set(sc_map.get(sc, []))            # all reqs this scenario can satisfy
-        for tid in disp.columns:
-            if df.at[sc, tid] != 0:                  # only non‑white cells
-                disp.at[sc, tid] = ", ".join(
-                    str(r) for r in sorted(sc_reqs & test_req_map[tid])
-                )
-
-    return df, disp
+    return df, 1
 
 
 # ----------------------------------------------------------------------
@@ -274,3 +301,228 @@ def style_presence(df: pd.DataFrame, show_additional: bool = False):
                         {"selector": "tr", "props": "line-height: 1px;"},
                         {"selector": "td,th", "props": "line-height: inherit; padding: 0;"}
                     ])
+
+def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, display_in_execorder=True,
+                    barcolor="skyblue", linecolor="red", fig_height=600):
+    """
+    Create a bar plot of the total costs per test.
+    There are four types of cost plots as follows:
+        - Isolated Test Costs[key="absolute"]: Costs per test config, if they are applied from scratch.
+            - Modes: 1. "in order of execution" or 2. "in order of cost (least to most expensive)"
+        - Unoptimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+        - Optimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+    """
+
+    with open("reports/costs.json", "r") as f:
+        raw = json.load(f)
+    # Lookup table for scenario costs Scenario ID → cost
+    costs_lookup = {
+            int(b["scenarioID"]["value"]): int(b["cost"]["value"])
+            for b in raw["results"]["bindings"]
+        }
+    
+    # st.write(costs_lookup)
+
+    # Build a DataFrame with test IDs and their costs
+    test_costs = []
+    for i,test in enumerate(tests):
+        test_id = test["id"]
+        total_cost = sum(costs_lookup.get(scenario, 0) for scenario in test["scenarios"])
+        test_costs.append({"test_id": test_id, "absolute_total_cost": total_cost})
+    
+    costs_df = pd.DataFrame(test_costs)
+    # costs_df["test_id"] = costs_df["test_id"].astype(str) 
+
+
+    # Add the column for ordered cost
+    for i, row in costs_df.iterrows():
+        test_id = row["test_id"]
+        test = [test for test in tests if test["id"] == test_id][0]
+        apply_test_ids = test.get("apply", [])
+        retract_test_ids = test.get("retract", [])
+        costs_df.at[i, "scenarios"] = ", ".join([str(s) for s in test.get("scenarios", [])])
+        costs_df.at[i, "apply"] = ", ".join([str(s) for s in apply_test_ids])
+        costs_df.at[i, "retract"] = ", ".join([str(s) for s in retract_test_ids])
+        ordered_cost = sum(costs_lookup.get(scenario, 0) for scenario in apply_test_ids+ retract_test_ids)
+        costs_df.at[i, "total_ordered_cost"] = ordered_cost   
+        
+    # Add column for culmulative cost for the excution order
+    costs_df["cumulative_cost"] = costs_df["total_ordered_cost"].cumsum()
+
+
+    subtitle=""
+    cost_column = "absolute_total_cost"
+    yaxis_tag = "(in execution order of the test configuration)"
+    if type=="absolute":
+        subtitle = "Absolute cost calculated for each test configration isotedly"
+        cost_column = "absolute_total_cost"
+    elif type=="relative":
+        subtitle = "Running cost calculated for test configuration based on application and retraction cost"
+        cost_column = "total_ordered_cost"
+    if not display_in_execorder:
+        costs_df = costs_df.sort_values(by=[cost_column])
+        yaxis_tag = "(least to most expensive configuration)"
+    # else:
+        
+    # st.write(costs_df)
+    # st.write(costs_df.sort_values(by=[cost_column])[cost_column].cumsum().reset_index(drop=True))
+    
+    # Z-ORDERING: https://community.plotly.com/t/change-traces-order/84830/5
+    bar_trace = go.Bar(
+            x=costs_df["test_id"], 
+            y=costs_df[cost_column],
+            name="Test Configuration Cost",
+            marker=dict(color=barcolor), 
+            zorder=1,
+        )
+    line_trace = go.Line(
+            x=costs_df["test_id"], 
+            y=costs_df[cost_column].cumsum(),
+            name="Cumulative Cost",
+            line=dict(color=linecolor, width=1,),
+            zorder=0,
+        )
+
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(bar_trace, secondary_y=False)
+
+    if show_cumsum:
+        fig.add_trace(line_trace, secondary_y=True)
+
+    fig.update_layout(
+        title=title + f"<br><sup>{subtitle}</sup>",
+        xaxis_title="Test ID " + yaxis_tag,
+        yaxis_title="Total Cost",
+        xaxis=dict(
+            type='category',
+            categoryorder='array',
+            categoryarray=costs_df["test_id"].tolist(),
+            tickangle=-90,
+            tickfont=dict(size=8.5, color='black'),
+            # tickson='boundaries',
+            # showgrid=True,
+            dtick=1,
+            # tick0=0,
+            # mirror="allticks",
+        ),
+        # yaxis=dict(
+        #     type="category",
+        #     categoryorder='array',
+        #     categoryarray=costs_df.sort_values(by=[cost_column])[cost_column].cumsum().to_list()
+        # ),
+        height=fig_height,
+        showlegend=True,
+        legend=dict(
+            xanchor="right",
+            yanchor="top",
+            x=0.99, y=1.02,
+            orientation='h'
+        )
+    )
+
+    return fig
+    
+
+def build_sankey(
+    scenarios_df: pd.DataFrame,
+    reqs_df: pd.DataFrame,
+    selected_scenarios: list[int],
+    plot_height: int,
+) -> go.Figure:
+    """
+    Build a Scenario → Requirement → Quantity Sankey focused on the user
+    selection.
+    """
+    # ------------------------------------------------------------------ nodes
+    #   1. keep only rows for the chosen scenario(s)
+    s_df = scenarios_df.query("scenarioID in @selected_scenarios")
+
+
+    # st.write(s_df)
+    list_of_requirements = [int(i) for x in s_df["requirementIDs"].to_list() for i in x.split(",") if i.isdigit()]
+    # st.write(list_of_requirements)
+    r_df = reqs_df.query("id in @list_of_requirements")
+    # st.write(r_df)
+
+
+    #    2. build sr_df with scenrioID, requirementIDs, quantity  
+    # s_df -> dataframe with scenarioID, requirementIDs (comma separated)
+    # r_df -> dataframe with requirementID, quantity
+    # Join scenario with requirements and quantities
+    # sr_df = selected scenario -> requirements -> quantities
+    sr_df = (
+        s_df.assign(
+            requirementIDs=lambda d: d["requirementIDs"].str.split(",").apply(lambda x: [int(i) for i in x])
+        )  
+        .explode("requirementIDs")
+        .merge(
+            r_df[["id", "quantity"]],
+            left_on="requirementIDs",
+            right_on="id",
+            how="left",
+        )
+        .rename(columns={"scenarioID": "scenario_id", "id": "requirement_id", "quantity": "quantity_id"})
+    ).drop(columns=["requirementIDs"])
+    # st.write(sr_df)
+    
+    #   3. build the sankey nodes
+    labels_s = [f"S{sid}" for sid in s_df["scenarioID"].unique()]
+    labels_r = [f"R{rid}" for rid in sr_df["requirement_id"].unique()]
+    labels_q = [f"Q{qid}" for qid in sr_df["quantity_id"].unique()]
+    labels   = labels_s + labels_r + labels_q
+    index    = {lab: i for i, lab in enumerate(labels)}
+    # st.write(labels)
+    # ------------------------------------------------------------------ links
+    # Scenario ▶ Requirement
+    l1 = (
+        sr_df[["scenario_id", "requirement_id"]]
+        .drop_duplicates()
+        .assign(
+            source=lambda d: d["scenario_id"].map(lambda x: index[f"S{x}"]),
+            target=lambda d: d["requirement_id"].map(lambda x: index[f"R{x}"]),
+            value=1,
+        )
+    )
+    # Requirement ▶ Quantity
+    l2 = (
+        sr_df[["requirement_id", "quantity_id"]]
+        .drop_duplicates()
+        .assign(
+            source=lambda d: d["requirement_id"].map(lambda x: index[f"R{x}"]),
+            target=lambda d: d["quantity_id"].map(lambda x: index[f"Q{x}"]),
+            value=1,
+        )
+    )
+    links = pd.concat([l1, l2], ignore_index=True)
+    # st.write(links)
+    # ------------------------------------------------------------------ plotly
+    sankey = go.Sankey(
+        arrangement="snap",
+        node=dict(
+            label=labels, 
+            pad=5,
+            thickness=100,
+            line=dict(color="black", width=0.5),
+                  ),
+        link=dict(
+            source=links["source"],
+            target=links["target"],
+            value=links["value"],
+            color="rgba(0, 0, 0, 0.1)",
+            
+        ),
+        # adjust the color and boldness of text labels
+        textfont=dict(
+            color="black",
+            size=9,
+            family="Arial, sans-serif",
+        ),
+        # textposition="inside",
+        
+    )   
+    return go.Figure(data=[sankey]).update_layout(
+        title="Scenario → Requirement → Quantity connections",
+        height=plot_height,
+    )
