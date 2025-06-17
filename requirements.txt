@@ -3,3 +3,4 @@ numpy
 pandas
 plotly==5.22.0
 graphviz==0.20.3
+streamlit_echarts
