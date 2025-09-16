@@ -7,12 +7,12 @@ def test_optimize():
     applies a greedy algorithm to minimize transition costs, and saves the optimized output.
     """
     # Load test configurations
-    with open("reports/tests_unoptimized_def.json", "r") as f:
+    with open("../reports/tests_unoptimized_def.json", "r") as f:
         unoptimized_data = json.load(f)
         tests = unoptimized_data["tests"]
 
     # Load scenario costs
-    with open("reports/costs.json", "r") as f:
+    with open("../reports/costs.json", "r") as f:
         costs_data = json.load(f)
 
     scenario_costs = {
@@ -57,7 +57,7 @@ def test_optimize():
     final_retract = sorted(prev_scenarios)
 
     # Save optimized output
-    with open("reports/tests_optimized_def.json", "w") as f:
+    with open("../reports/tests_optimized_def.json", "w") as f:
         json.dump({"tests": final_tests}, f, indent=2)
 
     print("Final retract cost (at end):", sum(scenario_costs.get(s, 0) for s in final_retract))

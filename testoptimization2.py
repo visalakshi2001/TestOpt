@@ -18,19 +18,47 @@ def render(project: dict) -> None:
         return
     json_to_csv(json_input_path=json_path, csv_output_path=csv_path)
 
-    unopt_tests = json.load(open(os.path.join("reports/tests_unoptimized_def.json")))
-    opt_tests = json.load(open(os.path.join("reports/tests_optimized_def.json")))
-    reqs = pd.read_csv(os.path.join(folder, "reqs.csv"))
-    scenarios = pd.read_csv(os.path.join("reports/", "scenarios.csv"))
-    tests_raw_def = pd.read_json("reports/tests_raw_def.json")
+    reqproxy = json.load(open("reports/test-plan-py2/requirements-proxied.json", "rb+"))
+    costs = json.load(open("reports/test-plan-py2/costs.json", "rb+"))
+
+    pruned_tests = json.load(open(os.path.join("reports/test-plan-py2/pruned_tests.json")))
+    opt_tests = json.load(open(os.path.join("reports/test-plan-py2/test_order_optimized.json")))
     show_optimized = st.checkbox("Show Optimized Test Configurations", value=True)
+    reqproxy2 = {}
+    for ss in reqproxy["requirements"]:
+        # merge all the situations list into one list if there are more than one lists
+        reqproxy2[ss["id"]] = ss
+        reqproxy2[ss["id"]]["situations"] = [scenario for situation in ss["situations"] for scenario in situation["scenarios"]]
+        reqproxy2[ss["id"]].pop("configs", None)  
+
+              
+
+    scenario_cost_df = pd.DataFrame(list(costs["scenarios"].items()), columns=["Scenario", "Cost"])
+    quantity_cost_df = pd.DataFrame(list(costs["observations"].items()), columns=["Quantity", "Cost"])
     
+    unopt_tests = {"tests": pruned_tests}
+
+    ct = []
+    for i, tt in enumerate(unopt_tests["tests"]):
+        # target = [test for test in opt_tests["tests"] if test["uuid"] == tt["uuid"]][0]
+        tt["id"] = i+1 # target["id"]
+        # add apply and retract to each test, apply the tests that were not in previous test and retract the tests that are not in the current test
+        apply = list(set(tt["scenarios"]) - set(ct))
+        retract = list(set(ct) - set(tt["scenarios"]))
+        tt["apply"] = apply
+        tt["retract"] = retract
+        ct = tt["scenarios"]
+    
+    for ss in opt_tests["tests"]:
+        target = [test for test in unopt_tests["tests"] if test["uuid"] == ss["uuid"]][0]
+        ss["id"] = target["id"]
+
     st.markdown("### Test Configuration Metrics")   
     cols = st.columns(4)
-    cols[0].metric("Total Requirements:", f"{len(reqs)}")
-    cols[1].metric("Total Scenarios:", f"{len(scenarios)}")
-    cols[2].metric("Total Quantities:", f"{reqs['quantity'].nunique()}")
-    cols[3].metric("Total Test Configurations:", f"{len(tests_raw_def)}")
+    cols[0].metric("Total Requirements:", f"{len(reqproxy2)}")
+    cols[1].metric("Total Scenarios:", f"{len(scenario_cost_df)}")
+    cols[2].metric("Total Quantities:", f"{len(quantity_cost_df)}")
+    cols[3].metric("Total Test Configurations:", f"{len(unopt_tests['tests'])}")
 
     plot_option = st.selectbox(
         "Select Plot Type",
@@ -108,7 +136,3 @@ def render(project: dict) -> None:
             df2 = style_presence(df2, show_additional=show_additional)
             st.markdown("### Optimized Presence Matrix")
             st.dataframe(df2, use_container_width=True, row_height=30, height=500)
-        
-
-    
-    

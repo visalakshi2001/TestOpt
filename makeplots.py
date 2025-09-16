@@ -315,13 +315,15 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
             - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
     """
 
-    with open("reports/costs.json", "r") as f:
+    with open("reports/test-plan-py2/costs.json", "r") as f:
         raw = json.load(f)
+    
     # Lookup table for scenario costs Scenario ID → cost
-    costs_lookup = {
-            int(b["scenarioID"]["value"]): int(b["cost"]["value"])
-            for b in raw["results"]["bindings"]
-        }
+    costs_lookup = raw.get("scenarios", {})
+    # costs_lookup = {
+    #         int(b["scenarioID"]["value"]): int(b["cost"]["value"])
+    #         for b in raw["results"]["bindings"]
+    #     }
     
     # st.write(costs_lookup)
 
@@ -441,7 +443,7 @@ def build_sankey(
 
 
     # st.write(s_df)
-    list_of_requirements = [int(i) for x in s_df["requirementIDs"].to_list() for i in x.split(",") if i.isdigit()]
+    list_of_requirements = [i.strip() for x in s_df["requirementIDs"].to_list() for i in x.split(",")]
     # st.write(list_of_requirements)
     r_df = reqs_df.query("id in @list_of_requirements")
     # st.write(r_df)
@@ -454,7 +456,7 @@ def build_sankey(
     # sr_df = selected scenario -> requirements -> quantities
     sr_df = (
         s_df.assign(
-            requirementIDs=lambda d: d["requirementIDs"].str.split(",").apply(lambda x: [int(i) for i in x])
+            requirementIDs=lambda d: d["requirementIDs"].str.split(",").apply(lambda x: [i.strip() for i in x])
         )  
         .explode("requirementIDs")
         .merge(
@@ -468,9 +470,12 @@ def build_sankey(
     # st.write(sr_df)
     
     #   3. build the sankey nodes
-    labels_s = [f"S{sid}" for sid in s_df["scenarioID"].unique()]
-    labels_r = [f"R{rid}" for rid in sr_df["requirement_id"].unique()]
-    labels_q = [f"Q{qid}" for qid in sr_df["quantity_id"].unique()]
+    # labels_s = [f"S{sid}" for sid in s_df["scenarioID"].unique()]
+    # labels_r = [f"R{rid}" for rid in sr_df["requirement_id"].unique()]
+    # labels_q = [f"Q{qid}" for qid in sr_df["quantity_id"].unique()]
+    labels_s = [f"{sid}" for sid in s_df["scenarioID"].unique()]
+    labels_r = [f"{rid}" for rid in sr_df["requirement_id"].unique()]
+    labels_q = [f"{qid}" for qid in sr_df["quantity_id"].unique()]
     labels   = labels_s + labels_r + labels_q
     index    = {lab: i for i, lab in enumerate(labels)}
     # st.write(labels)
@@ -480,8 +485,10 @@ def build_sankey(
         sr_df[["scenario_id", "requirement_id"]]
         .drop_duplicates()
         .assign(
-            source=lambda d: d["scenario_id"].map(lambda x: index[f"S{x}"]),
-            target=lambda d: d["requirement_id"].map(lambda x: index[f"R{x}"]),
+            # source=lambda d: d["scenario_id"].map(lambda x: index[f"S{x}"]),
+            # target=lambda d: d["requirement_id"].map(lambda x: index[f"R{x}"]),
+            source=lambda d: d["scenario_id"].map(lambda x: index[f"{x}"]),
+            target=lambda d: d["requirement_id"].map(lambda x: index[f"{x}"]),
             value=1,
         )
     )
@@ -490,8 +497,8 @@ def build_sankey(
         sr_df[["requirement_id", "quantity_id"]]
         .drop_duplicates()
         .assign(
-            source=lambda d: d["requirement_id"].map(lambda x: index[f"R{x}"]),
-            target=lambda d: d["quantity_id"].map(lambda x: index[f"Q{x}"]),
+            source=lambda d: d["requirement_id"].map(lambda x: index[f"{x}"]),
+            target=lambda d: d["quantity_id"].map(lambda x: index[f"{x}"]),
             value=1,
         )
     )

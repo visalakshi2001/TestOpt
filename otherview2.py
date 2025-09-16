@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 from makeplots import build_sankey, make_presence_df, style_presence, make_cost_plots
-from src.costcalc import calculate_costs
+from src.costcalc2 import calculate_costs
 
 from streamlit_echarts import st_echarts
 
@@ -19,44 +19,76 @@ def render(project: dict) -> None:
         st.info("reqs.json data is not available – upload it via **🪄 Edit Data**")
         return
     
-    unopt_tests = json.load(open(os.path.join("reports/tests_unoptimized_def.json")))
-    opt_tests = json.load(open(os.path.join("reports/tests_optimized_def.json")))
+    # # ──────────────────────────── 2.  Load data once ────────────────────────────
+    opt_tests = json.load(open(os.path.join("reports/test-plan-py2/test_order_optimized.json")))
+    pruned_tests = json.load(open(os.path.join("reports/test-plan-py2/pruned_tests.json")))
+    unopt_tests = {"tests": pruned_tests}
+    ct = []
+    for i, tt in enumerate(unopt_tests["tests"]):
+        tt["id"] = i+1 
+        # add apply and retract to each test, apply the tests that were not in previous test and retract the tests that are not in the current test
+        apply = list(set(tt["scenarios"]) - set(ct))
+        retract = list(set(ct) - set(tt["scenarios"]))
+        tt["apply"] = apply
+        tt["retract"] = retract
+        ct = tt["scenarios"]
+    
+    for ss in opt_tests["tests"]:
+        target = [test for test in unopt_tests["tests"] if test["uuid"] == ss["uuid"]][0]
+        ss["id"] = target["id"]
 
-    # ──────────────────────────── 2.  Load data once ────────────────────────────
-    SCENARIOS_DF = load_csv("reports/scenarios.csv")  # columns: scenario_id, requirement_id
-    REQS_DF      = load_csv("reports/test_optimization_dashboard/reqs.csv")       # columns: requirement_id, quantity_id
-    REQS_DF["id"] = REQS_DF["id"].apply(lambda x: str(x))
+    reqproxy = json.load(open("reports/test-plan-py2/requirements-proxied.json", "rb+"))
+    reqproxy2 = {}
+    for ss in reqproxy["requirements"]:
+        # merge all the situations list into one list if there are more than one lists
+        reqproxy2[ss["id"]] = ss
+        reqproxy2[ss["id"]]["situations"] = ",".join([scenario for situation in ss["situations"] for scenario in situation["scenarios"]])
+        reqproxy2[ss["id"]].pop("configs", None)  
 
-    # ──────────────────────────── 3.   Sankey  ────────────────────────────
+    reqproxy2_df = pd.DataFrame.from_dict(reqproxy2, orient="index")
+    reqproxy2_df = reqproxy2_df.reset_index(drop=True).rename(columns={"situations": "scenarios"})
 
+    # make a scenarios dataframe from reqproxy2 with the structure:
+    # scenarioID, requirementIDs
+    # by iterating through each requirement and its situations and adding it to the scenario id with comma separated requirement ids
+    scenario_dict = {}
+    for req_id, req in reqproxy2.items():
+        for situation in req["situations"].split(","):
+            if situation not in scenario_dict:
+                scenario_dict[situation] = set()
+            scenario_dict[situation].add(req_id)
+    scenario_df = pd.DataFrame(list(scenario_dict.items()), columns=["scenarioID", "requirementIDs"])
+    scenario_df["requirementIDs"] = scenario_df["requirementIDs"].apply(lambda x: ",".join(x))
+
+    # # ──────────────────────────── 3.   Sankey  ────────────────────────────
     st.subheader("Select scenario(s) to inspect")
     cho_scenarios = st.multiselect(
-        "Scenario ID", sorted(SCENARIOS_DF["scenarioID"].unique()), max_selections=10
+        "Scenario ID", sorted(scenario_df["scenarioID"].unique()), max_selections=10
     )
     if cho_scenarios:
         with st.expander("Show plot settings", expanded=False):
             plot_height = st.slider(
                 "Set plot size",
                 min_value=450, max_value=900, value=600, step=30,)
-        fig = build_sankey(SCENARIOS_DF, REQS_DF, cho_scenarios, plot_height=plot_height)
+        fig = build_sankey(scenario_df, reqproxy2_df, cho_scenarios, plot_height=plot_height)
         st.plotly_chart(fig)
     else:
         st.info("⬆️ Pick one or more scenario IDs to show the Sankey.")
     
 
 
-    # ──────────────────────────── 3.  Requirement table ────────────────────────────
+    # # ──────────────────────────── 3.  Requirement table ────────────────────────────
     st.subheader("Which quantities satisfy a requirement?")
     req_id = st.multiselect(
-        "Requirement ID", sorted(REQS_DF["id"].unique())
+        "Requirement ID", sorted(reqproxy2_df["id"].unique())
     )
     if req_id != []:
-        st.write(REQS_DF.query("id in @req_id")[["id", "quantity"]])
+        st.write(reqproxy2_df.query("id in @req_id")[["id", "quantity"]])
     else:
         st.info("⬆️ Pick one or more requirement IDs to show the quantities that satisfy them.")
 
 
-    # ──────────────────────────── 4.  Cost charts ────────────────────────────
+    # # ──────────────────────────── 4.  Cost charts ────────────────────────────
     st.subheader("Cost Calculation")
     # Display a grid of metrics with total costs
     costs = calculate_costs(unopt_tests["tests"])
@@ -101,16 +133,16 @@ def render(project: dict) -> None:
         fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
     )
     st.plotly_chart(fig1, use_container_width=True)
-    if show_optimized:
-        fig2 = make_cost_plots(
-            opt_tests["tests"], 
-            title="Optimized Tests", 
-            type=cost_type,
-            show_cumsum=show_cumsum,
-            display_in_execorder=display_in_execorder,
-            fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
-        )
-        st.plotly_chart(fig2, use_container_width=True)
+    # if show_optimized:
+    #     fig2 = make_cost_plots(
+    #         opt_tests["tests"], 
+    #         title="Optimized Tests", 
+    #         type=cost_type,
+    #         show_cumsum=show_cumsum,
+    #         display_in_execorder=display_in_execorder,
+    #         fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
+    #     )
+    #     st.plotly_chart(fig2, use_container_width=True)
 
 
 
