@@ -4,8 +4,8 @@ import streamlit as st
 from projectdetail import project_form, VIEW_OPTIONS, DATA_TIES, replace_data, REPORTS_ROOT
 
 import homepage
-import testoptimization
-import otherview
+import testoptimization2
+import otherview2
 
 st.set_page_config("Test Optimization Dashboard", page_icon="🤖", layout="wide")
 
@@ -39,11 +39,11 @@ def show_tab(tab_name, project):
         return
     
     if tab_name == "Test Configuration":
-        testoptimization.render(project)
+        testoptimization2.render(project)
         return
 
     if tab_name == "Others":
-        otherview.render(project)  
+        otherview2.render(project)  
         return
 
 
