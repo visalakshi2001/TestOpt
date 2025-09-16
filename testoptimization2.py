@@ -5,7 +5,7 @@ from projectdetail import DATA_TIES      # reuse the same mapping
 import json
 
 from makeplots import plot_scenario_heatmaps, plot_sequence_dots, build_scenario_timeline, make_presence_df, style_presence
-
+from src.costcalc2 import calculate_costs
 from jsontocsv import json_to_csv
 
 def render(project: dict) -> None:
@@ -23,7 +23,6 @@ def render(project: dict) -> None:
 
     pruned_tests = json.load(open(os.path.join("reports/test-plan-py2/pruned_tests.json")))
     opt_tests = json.load(open(os.path.join("reports/test-plan-py2/test_order_optimized.json")))
-    show_optimized = st.checkbox("Show Optimized Test Configurations", value=True)
     reqproxy2 = {}
     for ss in reqproxy["requirements"]:
         # merge all the situations list into one list if there are more than one lists
@@ -60,6 +59,26 @@ def render(project: dict) -> None:
     cols[2].metric("Total Quantities:", f"{len(quantity_cost_df)}")
     cols[3].metric("Total Test Configurations:", f"{len(unopt_tests['tests'])}")
 
+    # Display a grid of metrics with total costs
+    st.markdown("##### Test Configuration Metrics")
+    costs = calculate_costs(unopt_tests["tests"])
+    show_optimized_numbers = st.checkbox("Show Optimized Values", value=True, key="cost_opt_plot")
+    
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Unoptimized Apply Cost", f"{costs['total_apply_cost']:,} $")
+    col2.metric("Unoptimized Retract Cost", f"{costs['total_retract_cost']:,} $")
+    col3.metric("Unoptimized Combined Cost", f"{costs['total_combined_cost']:,} $")
+    # st.markdown("---")
+    if show_optimized_numbers:
+        # show optimized costs
+        opt_costs = calculate_costs(opt_tests["tests"])
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Optimized Apply Cost", f"{opt_costs['total_apply_cost']:,} $")
+        col2.metric("Optimized Retract Cost", f"{opt_costs['total_retract_cost']:,} $")
+        col3.metric("Optimized Combined Cost", f"{opt_costs['total_combined_cost']:,} $")   
+    
+    st.markdown("##### Test Configuration Chart")
+    show_optimized = st.checkbox("Show Optimized Test Configurations", key="opt_plot2")
     plot_option = st.selectbox(
         "Select Plot Type",
         options=["Scenario Heatmaps", "Test Sequence Dots", "Scenario Timeline", "Presence Matrix"],

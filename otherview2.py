@@ -5,8 +5,8 @@ import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
 
-from makeplots import build_sankey, make_presence_df, style_presence, make_cost_plots
-from src.costcalc2 import calculate_costs
+from makeplots import build_sankey, make_presence_df, style_presence, make_cost_plots, make_cost_histogram
+
 
 from streamlit_echarts import st_echarts
 
@@ -90,24 +90,6 @@ def render(project: dict) -> None:
 
     # # ──────────────────────────── 4.  Cost charts ────────────────────────────
     st.subheader("Cost Calculation")
-    # Display a grid of metrics with total costs
-    costs = calculate_costs(unopt_tests["tests"])
-    cols = st.columns(2)
-    st.markdown("##### Test Configuration Metrics")
-    show_optimized = st.checkbox("Show Optimized Values", value=True, key="cost_opt_plot")
-    
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Unoptimized Apply Cost", f"{costs['total_apply_cost']:,} $")
-    col2.metric("Unoptimized Retract Cost", f"{costs['total_retract_cost']:,} $")
-    col3.metric("Unoptimized Combined Cost", f"{costs['total_combined_cost']:,} $")
-    # st.markdown("---")
-    if show_optimized:
-        # show optimized costs
-        opt_costs = calculate_costs(opt_tests["tests"])
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Optimized Apply Cost", f"{opt_costs['total_apply_cost']:,} $")
-        col2.metric("Optimized Retract Cost", f"{opt_costs['total_retract_cost']:,} $")
-        col3.metric("Optimized Combined Cost", f"{opt_costs['total_combined_cost']:,} $")   
     
     st.markdown("##### Cost Distribution")
     cols = st.columns(3)
@@ -115,7 +97,7 @@ def render(project: dict) -> None:
                              format_func=lambda x: {"relative": "Calculate cost for test **in execution order**", "absolute": "Calculate cost for **each test isotedly**"}[x])
     show_cumsum = cols[1].checkbox("Show Cumilative Cost Line", value=True)
     display_in_execorder = cols[1].checkbox("Show Graph in order or the Execution", value=True)
-    show_optimized = cols[2].checkbox("Show Optimized Test Configuration **Plot**", value=show_optimized, key="cost_opt_plot2")
+    show_optimized = cols[2].checkbox("Show Optimized Test Configuration **Plot**", key="cost_opt_plot2") #value=show_optimized,
     with st.expander("Show plot settings", expanded=False):
             cols = st.columns(2)
             barcolor = cols[0].color_picker(label="Adjust the color of the bars of the bar-plot", value="#87ceeb")
@@ -133,18 +115,36 @@ def render(project: dict) -> None:
         fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
     )
     st.plotly_chart(fig1, use_container_width=True)
-    # if show_optimized:
-    #     fig2 = make_cost_plots(
-    #         opt_tests["tests"], 
-    #         title="Optimized Tests", 
-    #         type=cost_type,
-    #         show_cumsum=show_cumsum,
-    #         display_in_execorder=display_in_execorder,
-    #         fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
-    #     )
-    #     st.plotly_chart(fig2, use_container_width=True)
+    if show_optimized:
+        fig2 = make_cost_plots(
+            opt_tests["tests"], 
+            title="Optimized Tests", 
+            type=cost_type,
+            show_cumsum=show_cumsum,
+            display_in_execorder=display_in_execorder,
+            fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
+        )
+        st.plotly_chart(fig2, use_container_width=True)
 
 
+    # # ──────────────────────────── 5.  Cost Distribution ────────────────────────────
+    
+    st.subheader("Cost Distribution Histogram")
+    with st.expander("Show plot settings", expanded=False):
+            nbins = st.slider(
+                "Set number of bins",
+                min_value=50, max_value=200, value=150, step=10,)
+            fig_height = st.slider(
+                "Set plot height",
+                min_value=400, max_value=1200, value=650, step=50,
+                key="cost_hist_height"
+            )
+    fig = make_cost_histogram(
+        unopt_tests["tests"], opt_tests["tests"],
+        title="Cost Distribution Histogram",
+        fig_height=fig_height, nbins=nbins
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 @st.cache_data
 def load_csv(name: str) -> pd.DataFrame:

@@ -369,6 +369,11 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
     # else:
         
     # st.write(costs_df)
+    
+    # $$$$$$$$$$$$$$$$$$$$$$$$$$$ i'd have to add in the last test config cost 
+    # isolated cost double, maybe the stats from acquired logic is false
+    # labels on secondary y-axis (left- individutal cost) separate colors
+    # put the total costs back on the summary page
     # st.write(costs_df.sort_values(by=[cost_column])[cost_column].cumsum().reset_index(drop=True))
     
     # Z-ORDERING: https://community.plotly.com/t/change-traces-order/84830/5
@@ -381,7 +386,8 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
         )
     line_trace = go.Line(
             x=costs_df["test_id"], 
-            y=costs_df[cost_column].cumsum(),
+            # y=costs_df[cost_column].cumsum(),
+            y=costs_df["cumulative_cost"],
             name="Cumulative Cost",
             line=dict(color=linecolor, width=1,),
             zorder=0,
@@ -414,6 +420,12 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
         #     categoryorder='array',
         #     categoryarray=costs_df.sort_values(by=[cost_column])[cost_column].cumsum().to_list()
         # ),
+        # yaxis2=dict(                     # secondary y-axis
+        #     title="Cumulative Costs",    # axis title
+        #     titlefont=dict(color="red"), # title color
+        #     tickfont=dict(color="red"),  # tick labels color
+        #     tickprefix="$",            # tick prefix
+        # ),
         height=fig_height,
         showlegend=True,
         legend=dict(
@@ -421,6 +433,121 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
             yanchor="top",
             x=0.99, y=1.02,
             orientation='h'
+        )
+    )
+
+    return fig
+
+def make_cost_histogram(unopt_tests, opt_tests, title="", 
+                        nbins=150, fig_height=600):
+    """
+    Create a bar plot of the total costs per test.
+    There are four types of cost plots as follows:
+        - Isolated Test Costs[key="absolute"]: Costs per test config, if they are applied from scratch.
+            - Modes: 1. "in order of execution" or 2. "in order of cost (least to most expensive)"
+        - Unoptimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+        - Optimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+    """
+
+    with open("reports/test-plan-py2/costs.json", "r") as f:
+        raw = json.load(f)
+    
+    # Lookup table for scenario costs Scenario ID → cost
+    costs_lookup = raw.get("scenarios", {})
+    # costs_lookup = {
+    #         int(b["scenarioID"]["value"]): int(b["cost"]["value"])
+    #         for b in raw["results"]["bindings"]
+    #     }
+    
+    # st.write(costs_lookup)
+
+    # Build a DataFrame with test IDs and their costs
+    test_costs = []
+    for i,test in enumerate(unopt_tests):
+        test_id = test["id"]
+        total_cost = sum(costs_lookup.get(scenario, 0) for scenario in test["scenarios"])
+        test_costs.append({"test_id": test_id, "absolute_total_cost": total_cost})
+    
+    unopt_costs_df = pd.DataFrame(test_costs)
+    unopt_costs_df["type"] = "Unoptimized Test Cost"
+    # costs_df["test_id"] = costs_df["test_id"].astype(str) 
+
+
+    # Add the column for ordered cost
+    for i, row in unopt_costs_df.iterrows():
+        test_id = row["test_id"]
+        test = [test for test in unopt_tests if test["id"] == test_id][0]
+        apply_test_ids = test.get("apply", [])
+        retract_test_ids = test.get("retract", [])
+        unopt_costs_df.at[i, "scenarios"] = ", ".join([str(s) for s in test.get("scenarios", [])])
+        unopt_costs_df.at[i, "apply"] = ", ".join([str(s) for s in apply_test_ids])
+        unopt_costs_df.at[i, "retract"] = ", ".join([str(s) for s in retract_test_ids])
+        ordered_cost = sum(costs_lookup.get(scenario, 0) for scenario in apply_test_ids+ retract_test_ids)
+        unopt_costs_df.at[i, "total_ordered_cost"] = ordered_cost   
+        
+    # Add column for culmulative cost for the excution order
+    unopt_costs_df["cumulative_cost"] = unopt_costs_df["total_ordered_cost"].cumsum()
+    
+    test_costs = []
+    for i,test in enumerate(opt_tests):
+        test_id = test["id"]
+        total_cost = sum(costs_lookup.get(scenario, 0) for scenario in test["scenarios"])
+        test_costs.append({"test_id": test_id, "absolute_total_cost": total_cost})
+    
+    opt_costs_df = pd.DataFrame(test_costs)
+    opt_costs_df["type"] = "Optimized Test Cost"
+    # costs_df["test_id"] = costs_df["test_id"].astype(str) 
+
+
+    # Add the column for ordered cost
+    for i, row in opt_costs_df.iterrows():
+        test_id = row["test_id"]
+        test = [test for test in opt_tests if test["id"] == test_id][0]
+        apply_test_ids = test.get("apply", [])
+        retract_test_ids = test.get("retract", [])
+        opt_costs_df.at[i, "scenarios"] = ", ".join([str(s) for s in test.get("scenarios", [])])
+        opt_costs_df.at[i, "apply"] = ", ".join([str(s) for s in apply_test_ids])
+        opt_costs_df.at[i, "retract"] = ", ".join([str(s) for s in retract_test_ids])
+        ordered_cost = sum(costs_lookup.get(scenario, 0) for scenario in apply_test_ids+ retract_test_ids)
+        opt_costs_df.at[i, "total_ordered_cost"] = ordered_cost   
+        
+    # Add column for culmulative cost for the excution order
+    opt_costs_df["cumulative_cost"] = opt_costs_df["total_ordered_cost"]#.cumsum()
+
+    costs_df = pd.concat([opt_costs_df, unopt_costs_df], ignore_index=True)
+
+    # st.write(costs_df)
+
+    # plot a histogram for total_ordered_cost column colored by the type column
+    fig = px.histogram(
+        costs_df, 
+        x="total_ordered_cost", 
+        nbins=nbins,
+        color="type",
+        # get two distinc colors for the bars: red and blue
+        color_discrete_map={
+            "Optimized Test Cost": "red",
+            "Unoptimized Test Cost": "blue",
+        }, 
+        barmode="overlay",
+        title=title,
+        # labels={"total_ordered_cost": "Total Ordered Cost"},
+        height=fig_height,
+    )
+    # rename the y-axis to "Number of Test Configurations"
+    # rename legend title to "Test Cost Type"
+    # add "$" to the x-axis ticks and change the step gap to 5
+    # add gridlines to the x-axis
+    # change the z-axis order so that unoptimized bars are ahead of optimized bars
+    fig.update_layout(
+        yaxis_title="Number of Test Configurations",
+        legend_title="Test Cost Type",
+        xaxis=dict(
+            tickprefix="$",
+            dtick=5,
+            showgrid=True,
         )
     )
 
