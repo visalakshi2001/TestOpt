@@ -41,8 +41,6 @@ def render(project: dict) -> None:
     observation_cost = json.load(open(observation_cost_json, "rb+"))
     costs_data = {"scenarios": {}, "observations": {}}
 
-    st.write(observation_cost)
-
     for sc in scenario_cost["results"]["bindings"]:
         costs_data["scenarios"][sc["scenarioID"]["value"]] = int(sc["cost"]["value"])
     
