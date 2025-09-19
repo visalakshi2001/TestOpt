@@ -352,13 +352,15 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
         
     # Add column for culmulative cost for the excution order
     costs_df["cumulative_cost"] = costs_df["total_ordered_cost"].cumsum()
-
+    # for the last entry in cost_df, add the valur of absolute_total_cost to cumulative_cost to match the Combine dcost in metrics
+    # this value is the cost to finally retract the last test configuration
+    costs_df.at[len(costs_df)-1, "cumulative_cost"] = costs_df.at[len(costs_df)-1, "cumulative_cost"] + costs_df.at[len(costs_df)-1, "absolute_total_cost"]
 
     subtitle=""
     cost_column = "absolute_total_cost"
     yaxis_tag = "(in execution order of the test configuration)"
     if type=="absolute":
-        subtitle = "Absolute cost calculated for each test configration isotedly"
+        subtitle = "Absolute cost calculated for each test configration in isolation (absolute cost of each test configuration)"
         cost_column = "absolute_total_cost"
     elif type=="relative":
         subtitle = "Running cost calculated for test configuration based on application and retraction cost"
@@ -366,14 +368,10 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
     if not display_in_execorder:
         costs_df = costs_df.sort_values(by=[cost_column])
         yaxis_tag = "(least to most expensive configuration)"
-    # else:
-        
+
+
     # st.write(costs_df)
     
-    # $$$$$$$$$$$$$$$$$$$$$$$$$$$ i'd have to add in the last test config cost 
-    # isolated cost double, maybe the stats from acquired logic is false
-    # labels on secondary y-axis (left- individutal cost) separate colors
-    # put the total costs back on the summary page
     # st.write(costs_df.sort_values(by=[cost_column])[cost_column].cumsum().reset_index(drop=True))
     
     # Z-ORDERING: https://community.plotly.com/t/change-traces-order/84830/5

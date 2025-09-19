@@ -57,20 +57,20 @@ def render(project: dict) -> None:
     # Display a grid of metrics with total costs
     st.markdown("##### Test Configuration Metrics")
     costs = calculate_costs(unopt_tests["tests"])
-    show_optimized_numbers = st.checkbox("Show Optimized Values", value=True, key="cost_opt_plot")
+    # show_optimized_numbers = st.checkbox("Show Optimized Values", value=True, key="cost_opt_plot")
     
     col1, col2, col3 = st.columns(3)
     col1.metric("Unoptimized Apply Cost", f"{costs['total_apply_cost']:,} $")
     col2.metric("Unoptimized Retract Cost", f"{costs['total_retract_cost']:,} $")
     col3.metric("Unoptimized Combined Cost", f"{costs['total_combined_cost']:,} $")
     # st.markdown("---")
-    if show_optimized_numbers:
+    # if show_optimized_numbers:
         # show optimized costs
-        opt_costs = calculate_costs(opt_tests["tests"])
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Optimized Apply Cost", f"{opt_costs['total_apply_cost']:,} $")
-        col2.metric("Optimized Retract Cost", f"{opt_costs['total_retract_cost']:,} $")
-        col3.metric("Optimized Combined Cost", f"{opt_costs['total_combined_cost']:,} $")
+    opt_costs = calculate_costs(opt_tests["tests"])
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Optimized Apply Cost", f"{opt_costs['total_apply_cost']:,} $")
+    col2.metric("Optimized Retract Cost", f"{opt_costs['total_retract_cost']:,} $")
+    col3.metric("Optimized Combined Cost", f"{opt_costs['total_combined_cost']:,} $")
 
     # # ──────────────────────────── 3.  Test Configuration Chart ────────────────────────────
     
@@ -157,12 +157,15 @@ def render(project: dict) -> None:
     st.subheader("Cost Calculation")
     
     st.markdown("##### Cost Distribution")
-    cols = st.columns(3)
-    cost_type = cols[0].radio(label="Cost Calculation: ", options=["absolute", "relative"], horizontal=True,
-                             format_func=lambda x: {"relative": "Calculate cost for test **in execution order**", "absolute": "Calculate cost for **each test in isolation**"}[x])
-    show_cumsum = cols[1].checkbox("Show Cumulative Cost Line", value=True)
-    display_in_execorder = cols[1].checkbox("Show Graph in order of the Execution", value=True)
-    show_optimized = cols[2].checkbox("Show Optimized Test Configuration **Plot**", key="cost_opt_plot2") #value=show_optimized,
+    cols = st.columns([3, 2, 2])
+    cost_type = cols[0].radio(label="Choose how the cost should be calculated: ", options=["absolute", "relative"], horizontal=True,
+                             format_func=lambda x: {"relative": "Calculate cost **with apply and retract cost of each test**", "absolute": "Calculate cost for **each test in isolation** (absolute cost)"}[x])
+    display_in_execorder = cols[1].radio(label="Choose the order of viewing the configuration data: ", options=[True, False], horizontal=True,
+                             format_func=lambda x: {True: "Arrange Test IDs in order of execution", False: "Arrange Test IDs in ascending order of cost"}[x])
+    if display_in_execorder:
+        show_cumsum = cols[2].checkbox("Show Cumulative Cost Line", value=True)
+    else:
+        show_cumsum = False
     with st.expander("Show plot settings", expanded=False):
             cols = st.columns(2)
             barcolor = cols[0].color_picker(label="Adjust the color of the bars of the bar-plot", value="#87ceeb")
@@ -180,16 +183,16 @@ def render(project: dict) -> None:
         fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
     )
     st.plotly_chart(fig1, use_container_width=True)
-    if show_optimized:
-        fig2 = make_cost_plots(
-            opt_tests["tests"], 
-            title="Optimized Tests", 
-            type=cost_type,
-            show_cumsum=show_cumsum,
-            display_in_execorder=display_in_execorder,
-            fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
-        )
-        st.plotly_chart(fig2, use_container_width=True)
+    # if show_optimized:
+    fig2 = make_cost_plots(
+        opt_tests["tests"], 
+        title="Optimized Tests", 
+        type=cost_type,
+        show_cumsum=show_cumsum,
+        display_in_execorder=display_in_execorder,
+        fig_height=fig_height, barcolor=barcolor, linecolor=linecolor
+    )
+    st.plotly_chart(fig2, use_container_width=True)
 
 
     # # ──────────────────────────── 5.  Cost Distribution ────────────────────────────
