@@ -1,0 +1,540 @@
+{
+  "reconfiguration_cost": 1052,
+  "observation_cost": 19,
+  "tests": [
+    {
+      "uuid": "6c25eaf3-f120-4f06-ba72-32a9997ed7ea",
+      "config_digest": "e99b9b00930fa3b99fef2862c12601e6",
+      "scenarios": [
+        "p1"
+      ],
+      "quantities": {
+        "q1": {
+          "requirements": [
+            "r1"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r1"
+      ],
+      "quantities_direct": [
+        "q1"
+      ],
+      "id": 1,
+      "retract": [],
+      "apply": [
+        "p1"
+      ]
+    },
+    {
+      "uuid": "04e8afed-414f-49f2-a00d-fb51f61324d5",
+      "config_digest": "c4cef8ab246d2e756bb6ecceba8d0dab",
+      "scenarios": [
+        "p9"
+      ],
+      "quantities": {
+        "q3": {
+          "requirements": [
+            "r5"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r5"
+      ],
+      "quantities_direct": [
+        "q3"
+      ],
+      "id": 2,
+      "retract": [
+        "p1"
+      ],
+      "apply": [
+        "p9"
+      ]
+    },
+    {
+      "uuid": "b2050a10-9d03-4483-aead-8b127c20c5a7",
+      "config_digest": "8bc17341b7d5d005b474a9dfaa9d6305",
+      "scenarios": [
+        "p10"
+      ],
+      "quantities": {
+        "q3": {
+          "requirements": [
+            "r4"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r4"
+      ],
+      "quantities_direct": [
+        "q3"
+      ],
+      "id": 3,
+      "retract": [
+        "p9"
+      ],
+      "apply": [
+        "p10"
+      ]
+    },
+    {
+      "uuid": "694c2a7e-0de6-44eb-a0b4-8773b42b8210",
+      "config_digest": "1b0ec05a1caf6322659d733b6fc05737",
+      "scenarios": [
+        "p32",
+        "p33",
+        "p36",
+        "p38",
+        "p42"
+      ],
+      "quantities": {
+        "q4": {
+          "requirements": [
+            "r8"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r8"
+      ],
+      "quantities_direct": [
+        "q4"
+      ],
+      "id": 4,
+      "retract": [
+        "p10"
+      ],
+      "apply": [
+        "p32",
+        "p33",
+        "p36",
+        "p38",
+        "p42"
+      ]
+    },
+    {
+      "uuid": "fde83e3a-fdae-4683-aff9-0317ee1a6c4c",
+      "config_digest": "991c3a9d9ba735b15971064129fc9674",
+      "scenarios": [
+        "p17",
+        "p18",
+        "p21",
+        "p23",
+        "p27"
+      ],
+      "quantities": {
+        "q4": {
+          "requirements": [
+            "r6"
+          ]
+        },
+        "q9": {
+          "requirements": [
+            "r14"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r6",
+        "r14"
+      ],
+      "quantities_direct": [
+        "q4",
+        "q9"
+      ],
+      "id": 5,
+      "retract": [
+        "p32",
+        "p33",
+        "p36",
+        "p38",
+        "p42"
+      ],
+      "apply": [
+        "p17",
+        "p18",
+        "p21",
+        "p23",
+        "p27"
+      ]
+    },
+    {
+      "uuid": "824442da-51b5-4bb3-993d-5c80bb0160bb",
+      "config_digest": "d8766bd205dac247fc85546698f27151",
+      "scenarios": [
+        "p17",
+        "p18",
+        "p22",
+        "p23",
+        "p27"
+      ],
+      "quantities": {
+        "q2": {
+          "requirements": [
+            "r2"
+          ]
+        },
+        "q4": {
+          "requirements": [
+            "r7"
+          ]
+        },
+        "q9": {
+          "requirements": [
+            "r15"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r2",
+        "r7",
+        "r15"
+      ],
+      "quantities_direct": [
+        "q2",
+        "q4",
+        "q9"
+      ],
+      "id": 6,
+      "retract": [
+        "p21"
+      ],
+      "apply": [
+        "p22"
+      ]
+    },
+    {
+      "uuid": "36d0f5e6-4fb6-4109-a004-0d000ddad68d",
+      "config_digest": "e5fd787c98e280679953dbe4cb8cd270",
+      "scenarios": [
+        "p15",
+        "p16",
+        "p17",
+        "p18",
+        "p22",
+        "p23",
+        "p27"
+      ],
+      "quantities": {
+        "q5": {
+          "requirements": [
+            "r9"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r9"
+      ],
+      "quantities_direct": [
+        "q5"
+      ],
+      "id": 7,
+      "retract": [],
+      "apply": [
+        "p15",
+        "p16"
+      ]
+    },
+    {
+      "uuid": "e44eeebd-40f0-4c89-be80-3dbd2bb6cf37",
+      "config_digest": "2ded5b12205d0e449b49af9b65688762",
+      "scenarios": [
+        "p15",
+        "p18",
+        "p22",
+        "p23",
+        "p27"
+      ],
+      "quantities": {
+        "q2": {
+          "requirements": [
+            "r3"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r3"
+      ],
+      "quantities_direct": [
+        "q2"
+      ],
+      "id": 8,
+      "retract": [
+        "p16",
+        "p17"
+      ],
+      "apply": []
+    },
+    {
+      "uuid": "66134dc8-3785-47f5-ba6a-4551ae7b1a90",
+      "config_digest": "acd75486624f3d444773a0bf845d8f77",
+      "scenarios": [
+        "p11",
+        "p12",
+        "p7"
+      ],
+      "quantities": {
+        "q6": {
+          "requirements": [
+            "r10"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r10"
+      ],
+      "quantities_direct": [
+        "q6"
+      ],
+      "id": 9,
+      "retract": [
+        "p15",
+        "p18",
+        "p22",
+        "p23",
+        "p27"
+      ],
+      "apply": [
+        "p11",
+        "p12",
+        "p7"
+      ]
+    },
+    {
+      "uuid": "8270fb42-79fc-4a4f-b085-5eccabf783c2",
+      "config_digest": "956b0146bdbe88886511b66f796f5813",
+      "scenarios": [
+        "p8"
+      ],
+      "quantities": {
+        "q6": {
+          "requirements": [
+            "r11"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r11"
+      ],
+      "quantities_direct": [
+        "q6"
+      ],
+      "id": 10,
+      "retract": [
+        "p11",
+        "p12",
+        "p7"
+      ],
+      "apply": [
+        "p8"
+      ]
+    },
+    {
+      "uuid": "70230241-1e6b-45e0-a34d-c69f266479c4",
+      "config_digest": "ad9bf41acc53080185e6b03a06b06489",
+      "scenarios": [
+        "s2",
+        "s9"
+      ],
+      "quantities": {
+        "q10": {
+          "requirements": [
+            "r17"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r17"
+      ],
+      "quantities_direct": [
+        "q10"
+      ],
+      "id": 11,
+      "retract": [
+        "p8"
+      ],
+      "apply": [
+        "s2",
+        "s9"
+      ]
+    },
+    {
+      "uuid": "2d8655f1-b37e-4e82-835e-c4ed728330ad",
+      "config_digest": "5a5a057be202db0bf17906c53cc6f3c2",
+      "scenarios": [
+        "s15",
+        "s17",
+        "s18",
+        "s8",
+        "s9"
+      ],
+      "quantities": {
+        "q8": {
+          "requirements": [
+            "r13"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r13"
+      ],
+      "quantities_direct": [
+        "q8"
+      ],
+      "id": 12,
+      "retract": [
+        "s2"
+      ],
+      "apply": [
+        "s15",
+        "s17",
+        "s18",
+        "s8"
+      ]
+    },
+    {
+      "uuid": "3b5d2147-b715-4efb-88ee-c7490c3a0e47",
+      "config_digest": "386742a34a715501fba9b6e8f263fa11",
+      "scenarios": [
+        "s1",
+        "s11",
+        "s12",
+        "s18",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s8",
+        "s9"
+      ],
+      "quantities": {
+        "q7": {
+          "requirements": [
+            "r12"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r12"
+      ],
+      "quantities_direct": [
+        "q7"
+      ],
+      "id": 13,
+      "retract": [
+        "s15",
+        "s17"
+      ],
+      "apply": [
+        "s1",
+        "s11",
+        "s12",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ]
+    },
+    {
+      "uuid": "63c3772b-02c8-44fb-b18f-31e1333c9ef9",
+      "config_digest": "a3ab055512c4ce09e050630d2e40b4c4",
+      "scenarios": [
+        "s2",
+        "s8"
+      ],
+      "quantities": {
+        "q10": {
+          "requirements": [
+            "r16"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r16"
+      ],
+      "quantities_direct": [
+        "q10"
+      ],
+      "id": 14,
+      "retract": [
+        "s1",
+        "s11",
+        "s12",
+        "s18",
+        "s3",
+        "s4",
+        "s5",
+        "s9"
+      ],
+      "apply": []
+    },
+    {
+      "uuid": "0d0269c9-e11d-4c06-babf-f97608b92758",
+      "config_digest": "a80751698e844f49b8e561db1dc7f1e3",
+      "scenarios": [
+        "s1",
+        "s8"
+      ],
+      "quantities": {
+        "q10": {
+          "requirements": [
+            "r18"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r18"
+      ],
+      "quantities_direct": [
+        "q10"
+      ],
+      "id": 15,
+      "retract": [
+        "s2"
+      ],
+      "apply": [
+        "s1"
+      ]
+    },
+    {
+      "uuid": "203636ae-150c-4862-9653-53a2e69cb694",
+      "config_digest": "27e97e0641590fc347b456088f90c8d6",
+      "scenarios": [
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6"
+      ],
+      "quantities": {
+        "q11": {
+          "requirements": [
+            "r19"
+          ]
+        }
+      },
+      "requirements_direct": [
+        "r19"
+      ],
+      "quantities_direct": [
+        "q11"
+      ],
+      "id": 16,
+      "retract": [
+        "s1",
+        "s8"
+      ],
+      "apply": [
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+{ "head": {
+    "vars": [ "scenarioID" , "cost" ]
+  } ,
+  "results": {
+    "bindings": [
+      { 
+        "scenarioID": { "type": "literal" , "value": "p1" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p2" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "2" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p3" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "3" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p4" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "4" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p5" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "5" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p6" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "6" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p7" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "7" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p8" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "8" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p9" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "9" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p10" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "10" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p11" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "11" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p12" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "12" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p13" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "13" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p14" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "14" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p15" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "15" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p16" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "16" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p17" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "17" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p18" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "18" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p19" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "19" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p20" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "20" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p21" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "21" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p22" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "22" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p23" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "23" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p24" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "24" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p25" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "25" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p26" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "26" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p27" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "27" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p28" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "28" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p29" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "29" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p30" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "30" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p31" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "31" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p32" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "32" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p33" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "33" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p34" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "34" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p35" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "35" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p36" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "36" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p37" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "37" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p38" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "38" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p39" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "39" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p40" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "40" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p41" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "41" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "p42" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "42" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s1" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s2" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "2" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s3" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "3" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s4" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "4" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s5" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "5" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s6" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "6" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s7" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "7" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s8" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "8" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s9" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "9" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s10" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "10" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s11" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "11" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s12" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "12" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s13" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "13" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s14" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "14" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s15" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "15" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s16" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "16" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s17" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "17" }
+      } ,
+      { 
+        "scenarioID": { "type": "literal" , "value": "s18" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "18" }
+      }
+    ]
+  }
+}

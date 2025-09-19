@@ -12,9 +12,9 @@ import logging
 from typing import List, Dict, Any, Tuple
 
 # ----------- Hard-coded input/output file paths -----------
-COST_MAP_FILE = "costs.json"
-TESTS_INPUT_FILE = "pruned_tests.json"
-OUTPUT_FILE = "test_order_optimized.json"
+# COST_MAP_FILE = "costs.json"
+# TESTS_INPUT_FILE = "pruned_tests.json"
+# OUTPUT_FILE = "test_order_optimized.json"
 # ---------------------------------------------------------
 
 
@@ -212,17 +212,17 @@ class OptimizeTestOrder:
         }
 
 
-def main():
+def optimize_test_order(pruned_tests_json, costs_json):
     """Main entry point (hard-coded I/O version)"""
     try:
         # Read input tests JSON
-        with open(TESTS_INPUT_FILE, 'r') as f:
+        with open(pruned_tests_json, 'r') as f:
             input_data = f.read()
 
         # Build a minimal args namespace expected by OptimizeTestOrder.run()
         class Args: pass
         args = Args()
-        args.cost_map = COST_MAP_FILE
+        args.cost_map = costs_json
         args.resort = False
         args.concorde = False
         args.no_optimize = False
@@ -232,12 +232,12 @@ def main():
         optimizer = OptimizeTestOrder()
         result = optimizer.run(args, input_data)
 
-        # Write output JSON
-        with open(OUTPUT_FILE, 'w') as f:
-            json.dump(result, f, indent=2)
+        # # Write output JSON
+        # with open(OUTPUT_FILE, 'w') as f:
+        #     json.dump(result, f, indent=2)
 
-        print(f"Optimized test order written to {OUTPUT_FILE}")
-        return 0
+        # print(f"Optimized test order written to {OUTPUT_FILE}")
+        return result
 
     except FileNotFoundError as e:
         print(f"Error: File not found: {e}", file=sys.stderr)
@@ -250,5 +250,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
-    sys.exit(main())
+# if __name__ == '__main__':
+#     sys.exit(main())

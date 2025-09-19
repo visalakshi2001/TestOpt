@@ -1,4 +1,6 @@
 __pycache__/
 testopt/
 .streamlit/
-app3.py
+old_version/
+reports/old reports/
+reports/test-plan-py2/

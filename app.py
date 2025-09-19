@@ -4,8 +4,6 @@ import streamlit as st
 from projectdetail import project_form, VIEW_OPTIONS, DATA_TIES, replace_data, REPORTS_ROOT
 
 import homepage
-import testoptimization2
-import otherview2
 import scenarios
 import teststrategy
 import requirements

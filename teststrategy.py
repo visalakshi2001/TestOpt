@@ -7,16 +7,60 @@ import numpy as np
 
 from src.costcalc2 import calculate_costs
 from makeplots import build_scenario_timeline, plot_sequence_dots, plot_scenario_heatmaps, make_presence_df, style_presence, make_cost_plots, make_cost_histogram
-
+from jsontocsv import json_to_csv
+from src.prune_tests import prune_tests
+from src.optimize_test_order import optimize_test_order
 
 from streamlit_echarts import st_echarts
 
 def render(project: dict) -> None:
     folder   = project["folder"]
+    json_path = os.path.join(folder, "sufficient.json")
+    sufficient_csv = os.path.join(folder, "suficient.csv")
+    tests_json = os.path.join(folder, "tests.json")
+    scenario_cost_json = os.path.join(folder, "scenarioCosts.json")
+    observation_cost_json = os.path.join(folder, "observationCosts.json")
+
+    if not os.path.exists(json_path) or not os.path.exists(scenario_cost_json) or not os.path.exists(observation_cost_json):
+        st.info("sufficient.json or observationCost.json or scenarioCost.json data is not available – upload it via **🪄 Edit Data**")
+        return
     
+    # json_to_csv(json_input_path=json_path, csv_output_path=sufficient_csv)
+    # json_to_csv(json_input_path=tests_json, csv_output_path=os.path.join(folder, "tests.csv"))
+
     # ──────────────────────────── 1.  Load data once ────────────────────────────
-    opt_tests = json.load(open(os.path.join("reports/test-plan-py2/test_order_optimized.json")))
-    pruned_tests = json.load(open(os.path.join("reports/test-plan-py2/pruned_tests.json")))
+    sufficient = json.load(open(json_path, "rb+"))
+    tests_data = json.load(open(tests_json, "rb+"))
+
+    pruned_tests = prune_tests(tests_data=tests_data, sufficiency_data=sufficient)
+    with open(os.path.join(folder, "pruned_tests.json"), "w") as f:
+        json.dump(pruned_tests, f, indent=2)
+    print(f"Pruned tests saved to {os.path.join(folder, 'pruned_tests.json')}")
+
+    scenario_cost = json.load(open(scenario_cost_json, "rb+"))
+    observation_cost = json.load(open(observation_cost_json, "rb+"))
+    costs_data = {"scenarios": {}, "observations": {}}
+
+    st.write(observation_cost)
+
+    for sc in scenario_cost["results"]["bindings"]:
+        costs_data["scenarios"][sc["scenarioID"]["value"]] = int(sc["cost"]["value"])
+    
+    for oc in observation_cost["results"]["bindings"]:
+        costs_data["observations"][oc["quantityID"]["value"]] = int(oc["cost"]["value"])
+    
+    with open(os.path.join(folder, "costs.json"), "w") as f:
+        json.dump(costs_data, f, indent=2)
+    print(f"Costs data saved to {os.path.join(folder, 'costs.json')}")
+    costs_json = os.path.join(folder, "costs.json")
+    pruned_tests_json = os.path.join(folder, "pruned_tests.json")
+
+    opt_tests = optimize_test_order(pruned_tests_json=pruned_tests_json, costs_json=costs_json)
+
+    with open(os.path.join(folder, "test_order_optimized.json"), "w") as f:
+        json.dump(opt_tests, f, indent=2)
+    print(f"Optimized test order saved to {os.path.join(folder, 'test_order_optimized.json')}")
+
     unopt_tests = {"tests": pruned_tests}
     ct = []
     for i, tt in enumerate(unopt_tests["tests"]):
@@ -32,31 +76,34 @@ def render(project: dict) -> None:
         target = [test for test in unopt_tests["tests"] if test["uuid"] == ss["uuid"]][0]
         ss["id"] = target["id"]
     
-    reqproxy = json.load(open("reports/test-plan-py2/requirements-proxied.json", "rb+"))
-    costs = json.load(open("reports/test-plan-py2/costs.json", "rb+"))
+    req_data = json.load(open(os.path.join("reports/Requirements.json"), "rb+"))
 
-    reqproxy2 = {}
-    for ss in reqproxy["requirements"]:
-        # merge all the situations list into one list if there are more than one lists
-        reqproxy2[ss["id"]] = ss
-        reqproxy2[ss["id"]]["situations"] = [scenario for situation in ss["situations"] for scenario in situation["scenarios"]]
-        reqproxy2[ss["id"]].pop("configs", None)  
+    requirements = {}
+    for req in req_data["results"]["bindings"]:
+        requirements[req["reqName"]["value"]] = {
+            "id": req["reqName"]["value"],
+            "scenarios": req["scenarios"]["value"],
+            "quantity": req["quaID"]["value"]
+        }
 
-    scenario_cost_df = pd.DataFrame(list(costs["scenarios"].items()), columns=["Scenario", "Cost"])
-    quantity_cost_df = pd.DataFrame(list(costs["observations"].items()), columns=["Quantity", "Cost"])
+    requirements_df = pd.DataFrame.from_dict(requirements, orient="index")
+    requirements_df = requirements_df.reset_index(drop=True).rename(columns={"index": "id"})
+
+    scenario_cost_df = pd.DataFrame(list(costs_data["scenarios"].items()), columns=["Scenario", "Cost"])
+    quantity_cost_df = pd.DataFrame(list(costs_data["observations"].items()), columns=["Quantity", "Cost"])
 
     # # ──────────────────────────── 2.  Test Configuration Metrics ────────────────────────────
     
     st.markdown("### Test Configuration Metrics")   
     cols = st.columns(4)
-    cols[0].metric("Total Requirements:", f"{len(reqproxy2)}")
+    cols[0].metric("Total Requirements:", f"{len(requirements)}")
     cols[1].metric("Total Scenarios:", f"{len(scenario_cost_df)}")
     cols[2].metric("Total Quantities:", f"{len(quantity_cost_df)}")
     cols[3].metric("Total Test Configurations:", f"{len(unopt_tests['tests'])}")
 
     # Display a grid of metrics with total costs
     st.markdown("##### Test Configuration Metrics")
-    costs = calculate_costs(unopt_tests["tests"])
+    costs = calculate_costs(unopt_tests["tests"], costs_data=costs_data)
     # show_optimized_numbers = st.checkbox("Show Optimized Values", value=True, key="cost_opt_plot")
     
     col1, col2, col3 = st.columns(3)
@@ -66,7 +113,7 @@ def render(project: dict) -> None:
     # st.markdown("---")
     # if show_optimized_numbers:
         # show optimized costs
-    opt_costs = calculate_costs(opt_tests["tests"])
+    opt_costs = calculate_costs(opt_tests["tests"], costs_data=costs_data)
     col1, col2, col3 = st.columns(3)
     col1.metric("Optimized Apply Cost", f"{opt_costs['total_apply_cost']:,} $")
     col2.metric("Optimized Retract Cost", f"{opt_costs['total_retract_cost']:,} $")
@@ -176,6 +223,7 @@ def render(project: dict) -> None:
             )
     fig1 = make_cost_plots(
         unopt_tests["tests"], 
+        costs_data=costs_data,
         title="Unoptimized Tests", 
         type=cost_type,
         show_cumsum=show_cumsum,
@@ -186,6 +234,7 @@ def render(project: dict) -> None:
     # if show_optimized:
     fig2 = make_cost_plots(
         opt_tests["tests"], 
+        costs_data=costs_data,
         title="Optimized Tests", 
         type=cost_type,
         show_cumsum=show_cumsum,
@@ -201,17 +250,17 @@ def render(project: dict) -> None:
     with st.expander("Show plot settings", expanded=False):
             nbins = st.slider(
                 "Set number of bins",
-                min_value=50, max_value=200, value=150, step=10,)
+                min_value=50, max_value=200, value=130, step=10,)
             bargap = st.slider(
                 "Set gap between bars",
-                min_value=0.0, max_value=1.0, value=0.1, step=0.05,)
+                min_value=0.0, max_value=1.0, value=0.2, step=0.05,)
             fig_height = st.slider(
                 "Set plot height",
                 min_value=400, max_value=1200, value=650, step=50,
                 key="cost_hist_height"
             )
     fig = make_cost_histogram(
-        unopt_tests["tests"], opt_tests["tests"],
+        unopt_tests["tests"], opt_tests["tests"], costs_data,
         title="Cost Distribution Histogram",
         fig_height=fig_height, nbins=nbins, bargap=bargap
     )

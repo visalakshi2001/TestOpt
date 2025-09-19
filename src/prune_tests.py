@@ -3,20 +3,20 @@ import json
 import logging
 
 # ----------- Hard-coded input/output file paths -----------
-SUFFICIENCY_FILE = "sufficient-random-1.json"
-TESTS_INPUT_FILE = "tests.json"
-OUTPUT_FILE = "pruned_tests.json"
+# SUFFICIENCY_FILE = "../reports/sufficient.json"
+# TESTS_INPUT_FILE = "tests.json"
+# OUTPUT_FILE = "pruned_tests.json"
 # ---------------------------------------------------------
 
 
-def setup_logging():
-    """Set up simple logging"""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='INFO: %(message)s',
-        stream=sys.stderr
-    )
-    return logging.getLogger('prune-tests')
+# def setup_logging():
+#     """Set up simple logging"""
+#     logging.basicConfig(
+#         level=logging.INFO,
+#         format='INFO: %(message)s',
+#         stream=sys.stderr
+#     )
+#     return logging.getLogger('prune-tests')
 
 
 def prune_tests(tests_data, sufficiency_data):
@@ -27,9 +27,9 @@ def prune_tests(tests_data, sufficiency_data):
     
     # Build sufficients mapping exactly like Ruby
     sufficients = {}
-    for sh in sufficiency_data:
-        req_id = sh['id']
-        config_sets = {frozenset(c) for c in sh['configs']}
+    for sh in sufficiency_data["results"]["bindings"]:
+        req_id = sh["reqName"]["value"]
+        config_sets = {frozenset(sh["scenarios"]["value"].split(","))}
         sufficients[req_id] = config_sets
     
     # Process each test exactly like Ruby
@@ -71,39 +71,39 @@ def prune_tests(tests_data, sufficiency_data):
     return tests_data
 
 
-def main():
-    """Main function matching Ruby's run method"""
-    logger = setup_logging()
+# def main():
+#     """Main function matching Ruby's run method"""
+#     logger = setup_logging()
     
-    try:
-        # Read sufficiency data from hard-coded file
-        with open(SUFFICIENCY_FILE, 'r') as f:
-            sufficients_json = json.load(f)
+#     try:
+#         # Read sufficiency data from hard-coded file
+#         with open(SUFFICIENCY_FILE, 'r') as f:
+#             sufficients_json = json.load(f)
         
-        # Read tests data from hard-coded file
-        with open(TESTS_INPUT_FILE, 'r') as f:
-            tests = json.load(f)
+#         # Read tests data from hard-coded file
+#         with open(TESTS_INPUT_FILE, 'r') as f:
+#             tests = json.load(f)
         
-        # Prune the tests
-        pruned_tests = prune_tests(tests, sufficients_json)
+#         # Prune the tests
+#         pruned_tests = prune_tests(tests, sufficients_json)
         
-        # Write output to hard-coded file
-        with open(OUTPUT_FILE, 'w') as f:
-            json.dump(pruned_tests, f, indent=2)
+#         # Write output to hard-coded file
+#         with open(OUTPUT_FILE, 'w') as f:
+#             json.dump(pruned_tests, f, indent=2)
 
-        print(f"Pruned tests written to {OUTPUT_FILE}")
-        return 0
+#         print(f"Pruned tests written to {OUTPUT_FILE}")
+#         return 0
         
-    except FileNotFoundError as e:
-        print(f"Error: File not found: {e}", file=sys.stderr)
-        return 1
-    except json.JSONDecodeError as e:
-        print(f"Error: JSON decode error: {e}", file=sys.stderr)
-        return 1
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
+#     except FileNotFoundError as e:
+#         print(f"Error: File not found: {e}", file=sys.stderr)
+#         return 1
+#     except json.JSONDecodeError as e:
+#         print(f"Error: JSON decode error: {e}", file=sys.stderr)
+#         return 1
+#     except Exception as e:
+#         print(f"Error: {e}", file=sys.stderr)
+#         return 1
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+# if __name__ == "__main__":
+#     sys.exit(main())

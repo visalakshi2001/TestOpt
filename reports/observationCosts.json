@@ -1,0 +1,52 @@
+{ "head": {
+    "vars": [ "quantityID" , "cost" ]
+  } ,
+  "results": {
+    "bindings": [
+      { 
+        "quantityID": { "type": "literal" , "value": "q1" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q2" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q3" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q4" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q5" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q6" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q7" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q8" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q9" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q10" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      } ,
+      { 
+        "quantityID": { "type": "literal" , "value": "q11" } ,
+        "cost": { "type": "literal" , "datatype": "http://www.w3.org/2001/XMLSchema#integer" , "value": "1" }
+      }
+    ]
+  }
+}

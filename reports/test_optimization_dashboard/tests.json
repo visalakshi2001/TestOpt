@@ -1,0 +1,410 @@
+[
+  {
+    "uuid": "2b1d1568-0a02-401b-8cb6-f9640fce70fc",
+    "config_digest": "e99b9b00930fa3b99fef2862c12601e6",
+    "scenarios": [
+      "p1"
+    ],
+    "quantities": {
+      "q1": {
+        "requirements": [
+          "r1"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r1"
+    ],
+    "quantities_direct": [
+      "q1"
+    ]
+  },
+  {
+    "uuid": "db353209-7db9-4f12-816c-7169b25d94ff",
+    "config_digest": "d8766bd205dac247fc85546698f27151",
+    "scenarios": [
+      "p17",
+      "p18",
+      "p22",
+      "p23",
+      "p27"
+    ],
+    "quantities": {
+      "q2": {
+        "requirements": [
+          "r2"
+        ]
+      },
+      "q4": {
+        "requirements": [
+          "r7"
+        ]
+      },
+      "q9": {
+        "requirements": [
+          "r15"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r2",
+      "r7",
+      "r15"
+    ],
+    "quantities_direct": [
+      "q2",
+      "q4",
+      "q9"
+    ]
+  },
+  {
+    "uuid": "043e7b58-8057-41ae-81a8-8759768cc1c6",
+    "config_digest": "2ded5b12205d0e449b49af9b65688762",
+    "scenarios": [
+      "p15",
+      "p18",
+      "p22",
+      "p23",
+      "p27"
+    ],
+    "quantities": {
+      "q2": {
+        "requirements": [
+          "r3"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r3"
+    ],
+    "quantities_direct": [
+      "q2"
+    ]
+  },
+  {
+    "uuid": "6f6f9b2d-8c4b-4166-844c-434069fd7df0",
+    "config_digest": "8bc17341b7d5d005b474a9dfaa9d6305",
+    "scenarios": [
+      "p10"
+    ],
+    "quantities": {
+      "q3": {
+        "requirements": [
+          "r4"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r4"
+    ],
+    "quantities_direct": [
+      "q3"
+    ]
+  },
+  {
+    "uuid": "041e090a-d759-4fdb-89f1-104e33e7d148",
+    "config_digest": "c4cef8ab246d2e756bb6ecceba8d0dab",
+    "scenarios": [
+      "p9"
+    ],
+    "quantities": {
+      "q3": {
+        "requirements": [
+          "r5"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r5"
+    ],
+    "quantities_direct": [
+      "q3"
+    ]
+  },
+  {
+    "uuid": "066c405b-6e99-4bf1-8f6e-84dabccecc8e",
+    "config_digest": "991c3a9d9ba735b15971064129fc9674",
+    "scenarios": [
+      "p17",
+      "p18",
+      "p21",
+      "p23",
+      "p27"
+    ],
+    "quantities": {
+      "q4": {
+        "requirements": [
+          "r6"
+        ]
+      },
+      "q9": {
+        "requirements": [
+          "r14"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r6",
+      "r14"
+    ],
+    "quantities_direct": [
+      "q4",
+      "q9"
+    ]
+  },
+  {
+    "uuid": "72f954c2-c5a7-4e69-adc8-502ab4f458e7",
+    "config_digest": "1b0ec05a1caf6322659d733b6fc05737",
+    "scenarios": [
+      "p32",
+      "p33",
+      "p36",
+      "p38",
+      "p42"
+    ],
+    "quantities": {
+      "q4": {
+        "requirements": [
+          "r8"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r8"
+    ],
+    "quantities_direct": [
+      "q4"
+    ]
+  },
+  {
+    "uuid": "c4665449-ae20-4e07-9a79-3d6956a4c782",
+    "config_digest": "e5fd787c98e280679953dbe4cb8cd270",
+    "scenarios": [
+      "p15",
+      "p16",
+      "p17",
+      "p18",
+      "p22",
+      "p23",
+      "p27"
+    ],
+    "quantities": {
+      "q2": {
+        "requirements": [
+          "r2",
+          "r3"
+        ]
+      },
+      "q4": {
+        "requirements": [
+          "r7"
+        ]
+      },
+      "q5": {
+        "requirements": [
+          "r9"
+        ]
+      },
+      "q9": {
+        "requirements": [
+          "r15"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r9"
+    ],
+    "quantities_direct": [
+      "q5"
+    ]
+  },
+  {
+    "uuid": "be97eb7a-6ff4-44d5-9fc7-56d56c45c640",
+    "config_digest": "acd75486624f3d444773a0bf845d8f77",
+    "scenarios": [
+      "p11",
+      "p12",
+      "p7"
+    ],
+    "quantities": {
+      "q6": {
+        "requirements": [
+          "r10"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r10"
+    ],
+    "quantities_direct": [
+      "q6"
+    ]
+  },
+  {
+    "uuid": "f9412367-33e5-4fa5-94c6-0f6cdc906d35",
+    "config_digest": "956b0146bdbe88886511b66f796f5813",
+    "scenarios": [
+      "p8"
+    ],
+    "quantities": {
+      "q6": {
+        "requirements": [
+          "r11"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r11"
+    ],
+    "quantities_direct": [
+      "q6"
+    ]
+  },
+  {
+    "uuid": "58eee894-0cdd-4495-a18c-2307cb80079c",
+    "config_digest": "386742a34a715501fba9b6e8f263fa11",
+    "scenarios": [
+      "s1",
+      "s11",
+      "s12",
+      "s18",
+      "s2",
+      "s3",
+      "s4",
+      "s5",
+      "s8",
+      "s9"
+    ],
+    "quantities": {
+      "q10": {
+        "requirements": [
+          "r16",
+          "r17",
+          "r18"
+        ]
+      },
+      "q7": {
+        "requirements": [
+          "r12"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r12"
+    ],
+    "quantities_direct": [
+      "q7"
+    ]
+  },
+  {
+    "uuid": "dd869c72-cfb3-4002-837b-209c98df6f37",
+    "config_digest": "5a5a057be202db0bf17906c53cc6f3c2",
+    "scenarios": [
+      "s15",
+      "s17",
+      "s18",
+      "s8",
+      "s9"
+    ],
+    "quantities": {
+      "q8": {
+        "requirements": [
+          "r13"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r13"
+    ],
+    "quantities_direct": [
+      "q8"
+    ]
+  },
+  {
+    "uuid": "81c8f895-4565-429c-9814-dc8a9ff6b3af",
+    "config_digest": "a3ab055512c4ce09e050630d2e40b4c4",
+    "scenarios": [
+      "s2",
+      "s8"
+    ],
+    "quantities": {
+      "q10": {
+        "requirements": [
+          "r16"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r16"
+    ],
+    "quantities_direct": [
+      "q10"
+    ]
+  },
+  {
+    "uuid": "556c8d20-cc87-4d2c-ac18-b6e279f03166",
+    "config_digest": "ad9bf41acc53080185e6b03a06b06489",
+    "scenarios": [
+      "s2",
+      "s9"
+    ],
+    "quantities": {
+      "q10": {
+        "requirements": [
+          "r17"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r17"
+    ],
+    "quantities_direct": [
+      "q10"
+    ]
+  },
+  {
+    "uuid": "9e62ac92-d99c-49a7-8a1c-2af23dd46eba",
+    "config_digest": "a80751698e844f49b8e561db1dc7f1e3",
+    "scenarios": [
+      "s1",
+      "s8"
+    ],
+    "quantities": {
+      "q10": {
+        "requirements": [
+          "r18"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r18"
+    ],
+    "quantities_direct": [
+      "q10"
+    ]
+  },
+  {
+    "uuid": "d8a1086c-a9bd-49e9-8452-d5b54e9c7207",
+    "config_digest": "27e97e0641590fc347b456088f90c8d6",
+    "scenarios": [
+      "p2",
+      "p3",
+      "p4",
+      "p5",
+      "p6"
+    ],
+    "quantities": {
+      "q11": {
+        "requirements": [
+          "r19"
+        ]
+      }
+    },
+    "requirements_direct": [
+      "r19"
+    ],
+    "quantities_direct": [
+      "q11"
+    ]
+  }
+]

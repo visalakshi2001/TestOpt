@@ -1,0 +1,103 @@
+{ "head": {
+    "vars": [ "reqName" , "scenarios" , "quaID" ]
+  } ,
+  "results": {
+    "bindings": [
+      { 
+        "reqName": { "type": "literal" , "value": "r1" } ,
+        "scenarios": { "type": "literal" , "value": "p1" } ,
+        "quaID": { "type": "literal" , "value": "q1" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r2" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p22,p17,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q2" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r3" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p22,p15,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q2" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r4" } ,
+        "scenarios": { "type": "literal" , "value": "p10" } ,
+        "quaID": { "type": "literal" , "value": "q3" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r5" } ,
+        "scenarios": { "type": "literal" , "value": "p9" } ,
+        "quaID": { "type": "literal" , "value": "q3" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r6" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p21,p17,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q4" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r7" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p22,p17,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q4" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r8" } ,
+        "scenarios": { "type": "literal" , "value": "p42,p36,p32,p38,p33" } ,
+        "quaID": { "type": "literal" , "value": "q4" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r9" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p22,p15,p16,p17,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q5" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r10" } ,
+        "scenarios": { "type": "literal" , "value": "p11,p12,p7" } ,
+        "quaID": { "type": "literal" , "value": "q6" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r11" } ,
+        "scenarios": { "type": "literal" , "value": "p8" } ,
+        "quaID": { "type": "literal" , "value": "q6" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r12" } ,
+        "scenarios": { "type": "literal" , "value": "s1,s2,s18,s11,s12,s8,s9,s3,s4,s5" } ,
+        "quaID": { "type": "literal" , "value": "q7" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r13" } ,
+        "scenarios": { "type": "literal" , "value": "s15,s17,s18,s8,s9" } ,
+        "quaID": { "type": "literal" , "value": "q8" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r14" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p21,p17,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q9" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r15" } ,
+        "scenarios": { "type": "literal" , "value": "p27,p22,p17,p23,p18" } ,
+        "quaID": { "type": "literal" , "value": "q9" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r16" } ,
+        "scenarios": { "type": "literal" , "value": "s2,s8" } ,
+        "quaID": { "type": "literal" , "value": "q10" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r17" } ,
+        "scenarios": { "type": "literal" , "value": "s2,s9" } ,
+        "quaID": { "type": "literal" , "value": "q10" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r18" } ,
+        "scenarios": { "type": "literal" , "value": "s1,s8" } ,
+        "quaID": { "type": "literal" , "value": "q10" }
+      } ,
+      { 
+        "reqName": { "type": "literal" , "value": "r19" } ,
+        "scenarios": { "type": "literal" , "value": "p2,p3,p4,p5,p6" } ,
+        "quaID": { "type": "literal" , "value": "q11" }
+      }
+    ]
+  }
+}

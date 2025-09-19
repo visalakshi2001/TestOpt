@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import streamlit as st
 
-def calculate_costs(tests):
+def calculate_costs(tests, costs_data):
     """
     Calculate the total apply and retract costs from the test data.
     Costs are loaded from a JSON file and summed based on scenario IDs.
@@ -11,9 +11,7 @@ def calculate_costs(tests):
     root_ = Path(__file__).parent.parent.resolve()
 
     # Load costs from costs.json and build a cost lookup dictionary
-    with open(root_ / "reports" / "test-plan-py2" / "costs.json", 'r') as cost_file:
-        cost_data = json.load(cost_file)
-        cost_lookup = cost_data.get("scenarios", {})
+    cost_lookup = costs_data.get("scenarios", {})
 
     # # Load the test data
     # file_path = 'reports/tests_unoptimized_def.json'

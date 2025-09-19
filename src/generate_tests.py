@@ -5,13 +5,14 @@ from collections import defaultdict
 import networkx as nx
 
 # ----------- Hard-coded input/output file paths -----------
-INPUT_FILE = "requirements-proxied.json"
-OUTPUT_FILE = "tests.json"
+# INPUT_FILE = "../reports/Requirements.json"
+# OUTPUT_FILE = "tests.json"
 # ---------------------------------------------------------
 
 
 def generate_tests(data):
-    requirements = data.get("requirements", [])
+
+    requirements = data["results"]["bindings"]
 
     # --- Build scenario sets and indexes, preserving insertion order ---
     scenario_sets_list = []  # Ordered list of scenario sets (as frozen sets)
@@ -23,24 +24,24 @@ def generate_tests(data):
     qty_by_rqt = {}  # Map: req_id -> quantity
 
     for rh in requirements:
-        req_id = rh.get("id")
-        quantity = rh.get("quantity")
+        req_id = rh["reqName"]["value"]
+        quantity = rh["quaID"]["value"]
         
         if req_id is None or quantity is None:
             continue
 
         # Process configs for this requirement
-        for ch in rh.get("configs", []):
-            scenarios = ch.get("scenarios", [])
-            ss = frozenset(scenarios)
+        scenarios = rh["scenarios"]["value"].split(",")
+        ss = frozenset(scenarios)
 
-            if ss not in scenario_sets_seen:
-                scenario_sets_seen.add(ss)
-                scenario_sets_list.append(ss)
 
-            if req_id not in rqts_by_ss_set[ss]:
-                rqts_by_ss_set[ss].add(req_id)
-                rqts_by_ss[ss].append(req_id)
+        if ss not in scenario_sets_seen:
+            scenario_sets_seen.add(ss)
+            scenario_sets_list.append(ss)
+
+        if req_id not in rqts_by_ss_set[ss]:
+            rqts_by_ss_set[ss].add(req_id)
+            rqts_by_ss[ss].append(req_id)
 
         rqts_by_qty[quantity].add(req_id)
         qty_by_rqt[req_id] = quantity
@@ -98,24 +99,3 @@ def generate_tests(data):
         tests.append(test_obj)
 
     return tests
-
-
-def main():
-    # Read input from hard-coded file
-    with open(INPUT_FILE, "r") as f:
-        input_data = json.load(f)
-
-    # Generate tests
-    output_data = generate_tests(input_data)
-
-    # Write output to hard-coded file
-    with open(OUTPUT_FILE, "w") as f:
-        json.dump(output_data, f, indent=2)
-
-    print(f"Tests written to {OUTPUT_FILE}")
-    return 0
-
-
-if __name__ == "__main__":
-    import sys
-    sys.exit(main())

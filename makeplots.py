@@ -302,7 +302,7 @@ def style_presence(df: pd.DataFrame, show_additional: bool = False):
                         {"selector": "td,th", "props": "line-height: inherit; padding: 0;"}
                     ])
 
-def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, display_in_execorder=True,
+def make_cost_plots(tests, costs_data, title="", type="absolute", show_cumsum=True, display_in_execorder=True,
                     barcolor="skyblue", linecolor="red", fig_height=600):
     """
     Create a bar plot of the total costs per test.
@@ -310,16 +310,13 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
         - Isolated Test Costs[key="absolute"]: Costs per test config, if they are applied from scratch.
             - Modes: 1. "in order of execution" or 2. "in order of cost (least to most expensive)"
         - Unoptimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
-            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumulative cost on right
         - Optimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
-            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumulative cost on right
     """
-
-    with open("reports/test-plan-py2/costs.json", "r") as f:
-        raw = json.load(f)
     
     # Lookup table for scenario costs Scenario ID → cost
-    costs_lookup = raw.get("scenarios", {})
+    costs_lookup = costs_data.get("scenarios", {})
     # costs_lookup = {
     #         int(b["scenarioID"]["value"]): int(b["cost"]["value"])
     #         for b in raw["results"]["bindings"]
@@ -436,7 +433,7 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
 
     return fig
 
-def make_cost_histogram(unopt_tests, opt_tests, title="", 
+def make_cost_histogram(unopt_tests, opt_tests, costs_data, title="", 
                         nbins=150, bargap=0.1, fig_height=600):
     """
     Create a bar plot of the total costs per test.
@@ -444,16 +441,13 @@ def make_cost_histogram(unopt_tests, opt_tests, title="",
         - Isolated Test Costs[key="absolute"]: Costs per test config, if they are applied from scratch.
             - Modes: 1. "in order of execution" or 2. "in order of cost (least to most expensive)"
         - Unoptimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
-            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumulative cost on right
         - Optimized Ordered Test Costs[key="relative"]: Costs per test config, if they are applied+retracted in the order of execution.
-            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumilative cost on right
+            - Modes: 1. single y-axis: Application cost on y-axis on left or 2. double y-axis: Application cost on left, cumulative cost on right
     """
-
-    with open("reports/test-plan-py2/costs.json", "r") as f:
-        raw = json.load(f)
     
     # Lookup table for scenario costs Scenario ID → cost
-    costs_lookup = raw.get("scenarios", {})
+    costs_lookup = costs_data.get("scenarios", {})
     # costs_lookup = {
     #         int(b["scenarioID"]["value"]): int(b["cost"]["value"])
     #         for b in raw["results"]["bindings"]
@@ -531,7 +525,7 @@ def make_cost_histogram(unopt_tests, opt_tests, title="",
         }, 
         barmode="overlay",
         title=title,
-        labels={"total_ordered_cost": "Total Cost in order of execution"},
+        labels={"total_ordered_cost": "Total Cost in order of execution (with application and retraction)"},
         height=fig_height,
     )
     # rename the y-axis to "Number of Test Configurations"
@@ -549,6 +543,13 @@ def make_cost_histogram(unopt_tests, opt_tests, title="",
         ),
         bargap=bargap,
         bargroupgap=0.5,
+        legend=dict(
+            title="Test Cost Type",
+            xanchor="right",
+            yanchor="top",
+            x=0.99, y=0.99,
+            orientation='h'
+        )
     )
 
     return fig
