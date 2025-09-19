@@ -420,12 +420,12 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
         #     categoryorder='array',
         #     categoryarray=costs_df.sort_values(by=[cost_column])[cost_column].cumsum().to_list()
         # ),
-        # yaxis2=dict(                     # secondary y-axis
-        #     title="Cumulative Costs",    # axis title
-        #     titlefont=dict(color="red"), # title color
-        #     tickfont=dict(color="red"),  # tick labels color
-        #     tickprefix="$",            # tick prefix
-        # ),
+        yaxis2=dict(                     # secondary y-axis
+            title="Cumulative Costs",    # axis title
+            titlefont=dict(color="red"), # title color
+            tickfont=dict(color="red"),  # tick labels color
+            tickprefix="$",            # tick prefix
+        ),
         height=fig_height,
         showlegend=True,
         legend=dict(
@@ -439,7 +439,7 @@ def make_cost_plots(tests="", title="", type="absolute", show_cumsum=True, displ
     return fig
 
 def make_cost_histogram(unopt_tests, opt_tests, title="", 
-                        nbins=150, fig_height=600):
+                        nbins=150, bargap=0.1, fig_height=600):
     """
     Create a bar plot of the total costs per test.
     There are four types of cost plots as follows:
@@ -533,7 +533,7 @@ def make_cost_histogram(unopt_tests, opt_tests, title="",
         }, 
         barmode="overlay",
         title=title,
-        # labels={"total_ordered_cost": "Total Ordered Cost"},
+        labels={"total_ordered_cost": "Total Cost in order of execution"},
         height=fig_height,
     )
     # rename the y-axis to "Number of Test Configurations"
@@ -548,7 +548,9 @@ def make_cost_histogram(unopt_tests, opt_tests, title="",
             tickprefix="$",
             dtick=5,
             showgrid=True,
-        )
+        ),
+        bargap=bargap,
+        bargroupgap=0.5,
     )
 
     return fig

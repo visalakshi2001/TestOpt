@@ -16,6 +16,7 @@ VIEW_OPTIONS = [
     "Test Facilities",
     "Test Configuration",
     "Warnings/Issues",
+    "Scenarios",
     "Others",
 ]
 REPORTS_ROOT = "reports"                           #  ./reports/…

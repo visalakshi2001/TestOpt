@@ -94,9 +94,9 @@ def render(project: dict) -> None:
     st.markdown("##### Cost Distribution")
     cols = st.columns(3)
     cost_type = cols[0].radio(label="Cost Calculation: ", options=["absolute", "relative"], horizontal=True,
-                             format_func=lambda x: {"relative": "Calculate cost for test **in execution order**", "absolute": "Calculate cost for **each test isotedly**"}[x])
-    show_cumsum = cols[1].checkbox("Show Cumilative Cost Line", value=True)
-    display_in_execorder = cols[1].checkbox("Show Graph in order or the Execution", value=True)
+                             format_func=lambda x: {"relative": "Calculate cost for test **in execution order**", "absolute": "Calculate cost for **each test in isolation**"}[x])
+    show_cumsum = cols[1].checkbox("Show Cumulative Cost Line", value=True)
+    display_in_execorder = cols[1].checkbox("Show Graph in order of the Execution", value=True)
     show_optimized = cols[2].checkbox("Show Optimized Test Configuration **Plot**", key="cost_opt_plot2") #value=show_optimized,
     with st.expander("Show plot settings", expanded=False):
             cols = st.columns(2)
@@ -134,6 +134,9 @@ def render(project: dict) -> None:
             nbins = st.slider(
                 "Set number of bins",
                 min_value=50, max_value=200, value=150, step=10,)
+            bargap = st.slider(
+                "Set gap between bars",
+                min_value=0.0, max_value=1.0, value=0.1, step=0.05,)
             fig_height = st.slider(
                 "Set plot height",
                 min_value=400, max_value=1200, value=650, step=50,
@@ -142,7 +145,7 @@ def render(project: dict) -> None:
     fig = make_cost_histogram(
         unopt_tests["tests"], opt_tests["tests"],
         title="Cost Distribution Histogram",
-        fig_height=fig_height, nbins=nbins
+        fig_height=fig_height, nbins=nbins, bargap=bargap
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -153,3 +156,12 @@ def load_csv(name: str) -> pd.DataFrame:
 
 
 
+# tabs
+# SCENARIOS
+# REQUIREMENTS
+# TEST STRATEGY
+
+# remove cumulative line in ascending bar chart
+# remove option to show optimized in the metrics section
+# add the absolute cost to the cumulative sum
+# remove isotedly from plot title and subtitle

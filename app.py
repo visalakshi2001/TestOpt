@@ -6,6 +6,9 @@ from projectdetail import project_form, VIEW_OPTIONS, DATA_TIES, replace_data, R
 import homepage
 import testoptimization2
 import otherview2
+import scenarios
+import teststrategy
+import requirements
 
 st.set_page_config("Test Optimization Dashboard", page_icon="🤖", layout="wide")
 
@@ -19,7 +22,7 @@ def init_session():
                 'id': 1, 
                 'name': "Test Optimization Dashboard", 
                 'description': "", 
-                'views': ["Home Page"] + ["Test Configuration", "Others"], 
+                'views': ["Home Page"] + ["Test Configuration", "Others", "Test Strategy", "Requirements", "Scenarios"], 
                 'folder': os.path.join(REPORTS_ROOT, "Test Optimization Dashboard".lower().replace(" ", "_"))
             }
         ]
@@ -38,12 +41,16 @@ def show_tab(tab_name, project):
         homepage.render(project)          # ./homepage.py
         return
     
-    if tab_name == "Test Configuration":
-        testoptimization2.render(project)
+    if tab_name == "Scenarios":
+        scenarios.render(project)
         return
-
-    if tab_name == "Others":
-        otherview2.render(project)  
+    
+    if tab_name == "Test Strategy":
+        teststrategy.render(project)
+        return
+    
+    if tab_name == "Requirements":
+        requirements.render(project)
         return
 
 
@@ -87,9 +94,6 @@ def panel():
         inspect = st.button("Inspect Error", icon="🔍")
 
 def main():
-
-    st.title("🔭 Test Optimization Dashboard Exp")
-
 
     projectlist = st.session_state['projectlist']
     currproject = st.session_state['currproject']
