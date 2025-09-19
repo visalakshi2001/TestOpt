@@ -22,7 +22,7 @@ def init_session():
                 'id': 1, 
                 'name': "Test Optimization Dashboard", 
                 'description': "", 
-                'views': ["Home Page"] + ["Test Configuration", "Others", "Test Strategy", "Requirements", "Scenarios"], 
+                'views': ["Home Page"] + ["Test Strategy", "Requirements", "Scenarios"], 
                 'folder': os.path.join(REPORTS_ROOT, "Test Optimization Dashboard".lower().replace(" ", "_"))
             }
         ]
@@ -41,12 +41,12 @@ def show_tab(tab_name, project):
         homepage.render(project)          # ./homepage.py
         return
     
-    if tab_name == "Scenarios":
-        scenarios.render(project)
-        return
-    
     if tab_name == "Test Strategy":
         teststrategy.render(project)
+        return
+    
+    if tab_name == "Scenarios":
+        scenarios.render(project)
         return
     
     if tab_name == "Requirements":

@@ -14,10 +14,8 @@ VIEW_OPTIONS = [
     "Test Strategy",
     "Test Results",
     "Test Facilities",
-    "Test Configuration",
     "Warnings/Issues",
     "Scenarios",
-    "Others",
 ]
 REPORTS_ROOT = "reports"                           #  ./reports/…
 DATA_TIES = {

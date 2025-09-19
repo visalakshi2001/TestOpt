@@ -156,11 +156,6 @@ def load_csv(name: str) -> pd.DataFrame:
 
 
 
-# tabs
-# SCENARIOS
-# REQUIREMENTS
-# TEST STRATEGY
-
 # remove cumulative line in ascending bar chart
 # remove option to show optimized in the metrics section
 # add the absolute cost to the cumulative sum
