@@ -17,6 +17,7 @@ def render(project: dict) -> None:
     folder   = project["folder"]
     json_path = os.path.join(folder, "sufficient.json")
     sufficient_csv = os.path.join(folder, "suficient.csv")
+    requirements_json = os.path.join(folder, "Requirements.json")
     tests_json = os.path.join(folder, "tests.json")
     scenario_cost_json = os.path.join(folder, "scenarioCosts.json")
     observation_cost_json = os.path.join(folder, "observationCosts.json")
@@ -74,7 +75,7 @@ def render(project: dict) -> None:
         target = [test for test in unopt_tests["tests"] if test["uuid"] == ss["uuid"]][0]
         ss["id"] = target["id"]
     
-    req_data = json.load(open(os.path.join("reports/Requirements.json"), "rb+"))
+    req_data = json.load(open(requirements_json, "rb+"))
 
     requirements = {}
     for req in req_data["results"]["bindings"]:
